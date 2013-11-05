@@ -26,6 +26,14 @@ NSString * const CGICalendarPropertySequence = @"SEQUENCE";
 
 @implementation CGICalendarProperty
 
+- (instancetype)init {
+	self = [super init];
+	if (self)
+		self.parameters = [NSMutableArray array];
+
+	return self;
+}
+
 #pragma mark -
 #pragma mark Parameter
 
@@ -40,7 +48,7 @@ NSString * const CGICalendarPropertySequence = @"SEQUENCE";
 }
 
 - (void)addParameter:(CGICalendarParameter *)parameter {
-	[[self parameters] addObject:parameter];
+	[self.parameters addObject:parameter];
 }
 
 - (void)removeParameterForName:(NSString *)name {
@@ -207,6 +215,23 @@ NSString * const CGICalendarPropertySequence = @"SEQUENCE";
 		}
 	}
 	return CGICalendarParticipationStatusUnkown;
+}
+
+- (NSDate *)dateValue {
+	// It is a Date, not Date-time
+	if ([[self parameterValueForName:@"VALUE"] isEqualToString:@"DATE"])
+		return [NSDate dateWithICalendarString:self.value format: CGNSDateICalendarDateFormat];
+
+	// Local time with timezone ID
+	if ([self parameterValueForName:@"TZID"]) {
+
+		NSTimeZone *timezone = [NSTimeZone timeZoneWithName:[self parameterValueForName:@"TZID"]];
+
+		return [NSDate dateWithICalendarString:self.value format: CGNSDateICalendarLocalDatetimeFormat timezone:timezone];
+	}
+
+	// No parameters, pass the value to NSDate category
+	return [NSDate dateWithICalendarString:[self value]];
 }
 
 @end

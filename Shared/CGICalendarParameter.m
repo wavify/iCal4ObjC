@@ -27,11 +27,15 @@ NSString * const CGICalendarParameterDelimiter = @"=";
 	[self setValue:[values objectAtIndex:1]];
 }
 
-- (NSString *) string {
+- (NSString *)string {
 	return [NSString stringWithFormat:@"%@%@%@",
 			[self name] ? [self name] : @"",
 			CGICalendarParameterDelimiter,
 			[self value] ? [self value] : @""];
+}
+
+- (NSString *)description {
+	return [self string];
 }
 
 @end

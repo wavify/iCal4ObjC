@@ -13,5 +13,6 @@
 - (id)initWithString:(NSString *)aString;
 - (void)setString:(NSString *)aString;
 - (NSString *) string;
+- (NSString *)description;
 
 @end

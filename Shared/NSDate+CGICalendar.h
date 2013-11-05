@@ -9,7 +9,14 @@
 
 @interface NSDate (CGICalendar)
 
+extern NSString * const CGNSDateICalendarUTCDateFormat;
+extern NSString * const CGNSDateICalendarLocalDatetimeFormat;
+extern NSString * const CGNSDateICalendarDateFormat;
+extern NSString * const CGNSDateISO8601DatetimeFormat;
+
 + (id)dateWithICalendarString:(NSString *)aString;
++ (id)dateWithICalendarString:(NSString *)aString format:(NSString *)format;
++ (id)dateWithICalendarString:(NSString *)aString format:(NSString *)format timezone:(NSTimeZone *)timezone;
 + (id)dateWithICalendarISO8601:(NSString *)aString;
 - (NSString *)descriptionICalendar;
 - (NSString *)descriptionISO8601;

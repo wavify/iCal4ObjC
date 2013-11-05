@@ -7,42 +7,62 @@
 
 #import "NSDate+CGICalendar.h"
 
-NSString * const CGNSDateICalendarDatetimeFormat = @"yyyyMMdd'T'kkmmss'Z'";
-NSString * const CGNSDateISO8601DatetimeFormat = @"yyyy-MM-dd kk:mm:ss";
+NSString * const CGNSDateICalendarUTCDateFormat = @"yyyyMMdd'T'HHmmss'Z'";
+NSString * const CGNSDateICalendarLocalDatetimeFormat = @"yyyyMMdd'T'HHmmss";
+NSString * const CGNSDateICalendarDateFormat = @"yyyyMMdd";
+NSString * const CGNSDateISO8601DatetimeFormat = @"yyyy-MM-dd HH:mm:ss";
 
 @implementation NSDate(CGICalendar)
 
 + (id)dateWithICalendarString:(NSString *)aString {
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-	NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-	[dateFormatter setTimeZone:timeZone];
-	[dateFormatter setDateFormat:CGNSDateICalendarDatetimeFormat];
-	NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-	[dateFormatter setLocale:locale];
-	return [dateFormatter dateFromString:aString];
+	if ([aString characterAtIndex:aString.length-1] == 'Z')
+		return [self dateWithICalendarString:aString format:CGNSDateICalendarUTCDateFormat];
+	else
+		return [self dateWithICalendarString:aString format:CGNSDateICalendarLocalDatetimeFormat];
+}
+
++ (id)dateWithICalendarString:(NSString *)aString format:(NSString *)format {
+	if ([format isEqualToString:CGNSDateICalendarUTCDateFormat])
+		return [self dateWithICalendarString:aString format:format timezone:[NSTimeZone timeZoneWithName:@"UTC"]];
+	else
+		return [self dateWithICalendarString:aString format:format timezone:nil];
+}
+
++ (id)dateWithICalendarString:(NSString *)aString format:(NSString *)format timezone:(NSTimeZone *)timezone {
+	NSDateFormatter *dateFormatter = [NSDateFormatter new];
+
+	dateFormatter.timeZone = timezone;
+	dateFormatter.dateFormat = format;
+	dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+
+	return [dateFormatter dateFromString: aString];
 }
 
 + (id)dateWithICalendarISO8601:(NSString *)aString {
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-	NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-	[dateFormatter setTimeZone:timeZone];
-	[dateFormatter setTimeStyle:NSDateFormatterFullStyle];
-	[dateFormatter setDateFormat:CGNSDateISO8601DatetimeFormat];
+	NSDateFormatter *dateFormatter = [NSDateFormatter new];
+
+	dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+	dateFormatter.timeStyle = NSDateFormatterFullStyle;
+	dateFormatter.dateFormat = CGNSDateISO8601DatetimeFormat;
+
 	return [dateFormatter dateFromString:aString];
 }
 
 - (NSString *)descriptionICalendar {
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-	NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-	[dateFormatter setTimeZone:timeZone];
-	[dateFormatter setDateFormat:CGNSDateICalendarDatetimeFormat];
+	NSDateFormatter *dateFormatter = [NSDateFormatter new];
+
+	dateFormatter.timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
+	dateFormatter.dateFormat = CGNSDateICalendarUTCDateFormat;
+
 	return [dateFormatter stringFromDate:self];
 }
 
 - (NSString *)descriptionISO8601 {
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-	[dateFormatter setLocale:[NSLocale systemLocale]];
-	[dateFormatter setDateFormat:CGNSDateISO8601DatetimeFormat];
+	NSDateFormatter *dateFormatter = [NSDateFormatter new];
+
+	dateFormatter.locale = [NSLocale systemLocale];
+	dateFormatter.dateFormat = CGNSDateISO8601DatetimeFormat;
+	
 	return [dateFormatter stringFromDate:self];
 }
 

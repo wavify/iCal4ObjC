@@ -75,4 +75,6 @@ typedef enum : NSUInteger {
 - (void)setParticipationStatus:(CGICalendarParticipationStatus)value;
 - (CGICalendarParticipationStatus)participationStatus;
 
+- (NSDate *)dateValue;
+
 @end
