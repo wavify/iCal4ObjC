@@ -481,7 +481,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = CG;
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = CyberGarage;
 			};
 			buildConfigurationList = C2D043C51680F946002ED226 /* Build configuration list for PBXProject "iCal4ObjC" */;
@@ -791,7 +791,6 @@
 		C2D0442B1680F9C3002ED226 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -815,7 +814,6 @@
 		C2D0442C1680F9C3002ED226 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DYLIB_COMPATIBILITY_VERSION = 1;
