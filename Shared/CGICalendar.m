@@ -85,7 +85,7 @@ NSString * const CGICalendarFooterContentline = @"END:VCALENDAR";
 	if (aString == nil) {
 		return NO;
 	}
-	NSArray *foldingContentLines = [aString componentsSeparatedByString:CGICalendarContentlineTerm];
+	NSArray *foldingContentLines = [aString componentsSeparatedByCharactersInSet: NSCharacterSet.newlineCharacterSet];
 	NSMutableArray *contentLines = [NSMutableArray array];
 	for (NSString *foldingContentLine in foldingContentLines) {
 		if (foldingContentLine == nil) {
