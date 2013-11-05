@@ -126,7 +126,7 @@ NSString * const CGICalendarContentlineComponentVtimezone = @"VTIMEZONE";
 	[self setValue:valueString];
 }
 
-- (NSString *)description; {
+- (NSString *)description {
 	NSMutableString *contentLine = [NSMutableString string];
 	if ([self hasName]) {
 		[contentLine appendString:[self name]];

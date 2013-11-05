@@ -43,7 +43,7 @@ NSString * const CGICalendarObjectProdidParam = @"PRODID";
 	return self;
 }
 
-- (id)initWithProdid:(NSString *)prodid version:(NSString *)version; {
+- (id)initWithProdid:(NSString *)prodid version:(NSString *)version {
 	if ((self = [super init])) {
 		[self setType:CGICalendarObjectTypeDefault];
 		[self setVersion:version];

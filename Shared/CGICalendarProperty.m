@@ -70,7 +70,7 @@ NSString * const CGICalendarPropertySequence = @"SEQUENCE";
 	[icalProp setValue:value];
 }
 
-- (void)setParameterValue:(NSString *)value forName:(NSString *)name parameterValues:(NSArray *)parameterValues parameterNames:(NSArray *)parameterNames; {
+- (void)setParameterValue:(NSString *)value forName:(NSString *)name parameterValues:(NSArray *)parameterValues parameterNames:(NSArray *)parameterNames {
 	[self setParameterValue:value forName:name parameterValues:[NSArray array] parameterNames:[NSArray array]];
 }
 
@@ -145,7 +145,7 @@ NSString * const CGICalendarPropertySequence = @"SEQUENCE";
 	return nil;
 }
 
-- (NSInteger)parameterIntegerForName:(NSString *)name; {
+- (NSInteger)parameterIntegerForName:(NSString *)name {
 	for (CGICalendarParameter *icalProp in [self parameters]) {
 		if ([icalProp isName:name]) {
 			return [icalProp integerValue];
@@ -154,7 +154,7 @@ NSString * const CGICalendarPropertySequence = @"SEQUENCE";
 	return 0;
 }
 
-- (float)parameterFloatForName:(NSString *)name; {
+- (float)parameterFloatForName:(NSString *)name {
 	for (CGICalendarParameter *icalProp in [self parameters]) {
 		if ([icalProp isName:name]) {
 			return [icalProp floatValue];

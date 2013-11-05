@@ -145,7 +145,7 @@ NSUInteger const CGICalendarComponentSequenceDefault = 0;
 	[self setPropertyValue:value forName:name parameterValues:[NSArray array] parameterNames:[NSArray array]];
 }
 
-- (void)setPropertyValue:(NSString *)value forName:(NSString *)name parameterValues:(NSArray *)parameterValues parameterNames:(NSArray *)parameterNames; {
+- (void)setPropertyValue:(NSString *)value forName:(NSString *)name parameterValues:(NSArray *)parameterValues parameterNames:(NSArray *)parameterNames {
 	CGICalendarProperty *icalProp = [self propertyForName:name];
 	if (icalProp == nil) {
 		icalProp = [[CGICalendarProperty alloc] init];
@@ -234,7 +234,7 @@ NSUInteger const CGICalendarComponentSequenceDefault = 0;
 	return nil;
 }
 
-- (NSInteger)propertyIntegerForName:(NSString *)name; {
+- (NSInteger)propertyIntegerForName:(NSString *)name {
 	for (CGICalendarProperty *icalProp in [self properties]) {
 		if ([icalProp isName:name])
 			return [icalProp integerValue];
@@ -242,7 +242,7 @@ NSUInteger const CGICalendarComponentSequenceDefault = 0;
 	return 0;
 }
 
-- (float)propertyFloatForName:(NSString *)name; {
+- (float)propertyFloatForName:(NSString *)name {
 	for (CGICalendarProperty *icalProp in [self properties]) {
 		if ([icalProp isName:name]) {
 			return [icalProp floatValue];
@@ -457,11 +457,11 @@ NSString * const CGICalendarContentlineNameEnd = @"END";
 #pragma mark -
 #pragma mark 4.8.7.3 Last Modified
 
-- (void)setLastModified:(NSDate *)value; {
+- (void)setLastModified:(NSDate *)value {
 	[self setPropertyDate:value forName:CGICalendarPropertyLastModified];
 }
 
-- (NSDate *)lastModified; {
+- (NSDate *)lastModified {
 	return [self propertyDateForName:CGICalendarPropertyLastModified];
 }
 
