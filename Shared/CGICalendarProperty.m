@@ -17,6 +17,7 @@ NSString * const CGICalendarPropertyDtstart = @"DTSTART";
 NSString * const CGICalendarPropertyDescription = @"DESCRIPTION";
 NSString * const CGICalendarPropertyPriority = @"PRIORITY";
 NSString * const CGICalendarPropertySummary = @"SUMMARY";
+NSString * const CGICalendarPropertyLocation = @"LOCATION";
 NSString * const CGICalendarPropertyUid = @"UID";
 NSString * const CGICalendarPropertyCreated = @"CREATED";
 NSString * const CGICalendarPropertyDtstamp = @"DTSTAMP";

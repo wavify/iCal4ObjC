@@ -21,6 +21,7 @@ extern NSString * const CGICalendarPropertyDtstart;
 extern NSString * const CGICalendarPropertyDescription;
 extern NSString * const CGICalendarPropertyPriority;
 extern NSString * const CGICalendarPropertySummary;
+extern NSString * const CGICalendarPropertyLocation;
 
 // 4.8.4 Relationship Component Properties
 

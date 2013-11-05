@@ -38,6 +38,7 @@ extern NSString * const CGICalendarComponentTypeAlarm;
 - (BOOL)isFreebusy;
 - (BOOL)isTimezone;
 - (BOOL)isAlarm;
+- (BOOL) isFullDay;
 
 - (void)addComponent:(CGICalendarComponent *)component;
 - (void)insertComponent:(CGICalendarComponent *)component atIndex:(NSUInteger)index;
@@ -79,6 +80,10 @@ extern NSString * const CGICalendarComponentTypeAlarm;
 // 4.8.1.5 Description
 - (void)setNotes:(NSString *)value;
 - (NSString *)notes;
+
+// 4.8.1.7
+- (void)setLocation:(NSString *)value;
+- (NSString *)location;
 
 // 4.8.1.9 Priority
 - (void)setPriority:(NSUInteger)value;

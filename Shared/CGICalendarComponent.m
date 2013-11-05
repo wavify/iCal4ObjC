@@ -282,6 +282,19 @@ NSUInteger const CGICalendarComponentSequenceDefault = 0;
 	return [self isType:CGICalendarComponentTypeAlarm];
 }
 
+-(BOOL) isFullDay {
+	// CG_ICALENDAR_PROERTY_DTSTART
+	for (CGICalendarProperty *icalProp in [self properties])
+		if ([icalProp isName:CGICalendarPropertyDtstart])
+			if (icalProp.parameters.count > 0) {
+				CGICalendarParameter * param = icalProp.parameters.lastObject;
+				return (param.hasName && param.hasValue &&
+						([param.name compare:@"VALUE"] == 0) && ([param.value compare:@"DATE"] == 0));
+			}
+
+	return NO;
+}
+
 #pragma mark -
 #pragma mark String
 
@@ -329,6 +342,17 @@ NSString * const CGICalendarContentlineNameEnd = @"END";
 
 - (NSString *)notes {
 	return [self propertyValueForName:CGICalendarPropertyDescription];
+}
+
+#pragma mark -
+#pragma mark 4.8.1.7 Location
+
+- (void)setLocation:(NSString *)value {
+	[self setPropertyValue:value forName:CGICalendarPropertyLocation];
+}
+
+- (NSString *)location {
+	return [self propertyValueForName:CGICalendarPropertyLocation];
 }
 
 #pragma mark -
