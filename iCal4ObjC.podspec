@@ -9,10 +9,11 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/cybergarage/iCal4ObjC.git', :tag => s.version.to_s }
   
   s.ios.deployment_target = '5.1'
+  s.ios.source_files = 'Shared/*.{h,m}', 'iOS/*.h'
   s.ios.public_header_files = 'Shared/*.h', 'iOS/*.h'
   s.osx.deployment_target = '10.6'
+  s.ios.source_files = 'Shared/*.{h,m}', 'OSX/*.h'
   s.osx.public_header_files = 'Shared/*.h', 'OSX/*.h'
   
-  s.source_files = 'Shared/*.{h,m}'
   s.requires_arc = true
 end
