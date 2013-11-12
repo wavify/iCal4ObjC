@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.ios.source_files = 'Shared/*.{h,m}', 'iOS/*.h'
   s.ios.public_header_files = 'Shared/*.h', 'iOS/*.h'
   s.osx.deployment_target = '10.6'
-  s.ios.source_files = 'Shared/*.{h,m}', 'OSX/*.h'
+  s.osx.source_files = 'Shared/*.{h,m}', 'OSX/*.h'
   s.osx.public_header_files = 'Shared/*.h', 'OSX/*.h'
   
   s.requires_arc = true
