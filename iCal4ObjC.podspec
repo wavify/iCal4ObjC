@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name         = 'iCal4ObjC'
   s.version      = '1.0'
-  s.summary      = 'iCal4ObjC is a Objective-C implementation of the iCalendar specification as defined in RFC2455. It supports to read or write the components of iCalendar in the stream easily.'
+  s.summary      = 'iCal4ObjC is a Objective-C implementation of the iCalendar specification as defined in RFC2455 for iOS and OS X.'
   s.homepage     = 'https://github.com/cybergarage/iCal4ObjC'
   s.license      = { :type => 'BSD', :file => 'LICENSE.txt' }
   s.author       = 'Satoshi Konno'
@@ -9,9 +9,10 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/cybergarage/iCal4ObjC.git', :tag => s.version.to_s }
   
   s.ios.deployment_target = '5.1'
+  s.ios.public_header_files = 'Shared/*.h', 'iOS/*.h'
   s.osx.deployment_target = '10.6'
+  s.osx.public_header_files = 'Shared/*.h', 'OSX/*.h'
   
-  s.source_files = 'iCalObjCSDK/*.{h,m}'
-  s.public_header_files = 'iCalObjCSDK/*.h'
+  s.source_files = 'Shared/*.{h,m}'
   s.requires_arc = true
 end
