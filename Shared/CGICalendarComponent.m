@@ -121,7 +121,6 @@ NSUInteger const CGICalendarComponentSequenceDefault = 0;
 - (BOOL)hasPropertyForName:(NSString *)name {
 	for (CGICalendarProperty *icalProp in [self properties]) {
 		if ([icalProp isName:name]) {
-			[[self properties] removeObject:icalProp];
 			return YES;
 		}
 	}
