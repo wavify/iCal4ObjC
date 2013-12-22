@@ -13,29 +13,29 @@ NSString * const CGICalendarParameterDelimiter = @"=";
 
 - (id)initWithString:(NSString *)aString {
 	if ((self = [self init])) {
-		[self setString:aString];
+		self.string = aString;
 	}
 	return self;
 }
 
 - (void)setString:(NSString *)aString {
-	NSArray *values = [aString componentsSeparatedByString:CGICalendarParameterDelimiter];
-	if ([values count] < 2) {
+	NSArray *values = [aString componentsSeparatedByString: CGICalendarParameterDelimiter];
+	if (values.count < 2)
 		return;
-	}
-	[self setName:[values objectAtIndex:0]];
-	[self setValue:[values objectAtIndex:1]];
+
+	self.name = values[0];
+	self.value = values[1];
 }
 
 - (NSString *)string {
 	return [NSString stringWithFormat:@"%@%@%@",
-			[self name] ? [self name] : @"",
+			self.name ?: @"",
 			CGICalendarParameterDelimiter,
-			[self value] ? [self value] : @""];
+			self.value ?: @""];
 }
 
 - (NSString *)description {
-	return [self string];
+	return self.string;
 }
 
 @end

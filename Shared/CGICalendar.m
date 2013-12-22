@@ -31,28 +31,29 @@ NSString * const CGICalendarFooterContentline = @"END:VCALENDAR";
 	CFUUIDRef uuid = CFUUIDCreate(nil);
 	NSString *uuidString = (NSString*)CFBridgingRelease(CFUUIDCreateString(nil, uuid));
 	CFRelease(uuid);
-	return uuidString;}
+	return uuidString;
+}
 
 #pragma mark -
 #pragma mark Initialize
 
 - (id)init {
 	if ((self = [super init])) {
-		[self setObjects:[NSMutableArray array]];
+		[self setObjects: [NSMutableArray array]];
  	}
 	return self;
 }
 
 - (id)initWithString:(NSString *)aString {
 	if ((self = [self init])) {
-		[self parseWithString:aString error:nil];
+		[self parseWithString: aString error: nil];
 	}
 	return self;
 }
 
 - (id)initWithPath:(NSString *)aPath {
 	if ((self = [self init])) {
-		[self parseWithPath:aPath error:nil];
+		[self parseWithPath: aPath error: nil];
 	}
 	return self;
 }
@@ -61,113 +62,111 @@ NSString * const CGICalendarFooterContentline = @"END:VCALENDAR";
 #pragma mark Object
 
 - (void)addObject:(CGICalendarObject *)object {
-	[[self objects] addObject:object];
+	[self.objects addObject: object];
 }
 
 - (CGICalendarObject *)objectAtIndex:(NSUInteger)index {
-	return [[self objects] objectAtIndex:index];
+	return self.objects[index];
 }
 
 #pragma mark -
 #pragma mark Parser
 
 - (NSError *)createErrorAt:(NSUInteger)lineNumber lineString:(NSString *)lineString {
-	return [NSError errorWithDomain:@"iCalForObjC" code:-1 userInfo:
-			[NSDictionary dictionaryWithObjectsAndKeys:
-			 [NSString stringWithFormat:@"%u", lineNumber], @"LineNumber",
-			 lineString, @"ContentLine",
-			 nil]];
+	return [NSError errorWithDomain: @"iCalForObjC" code: -1 userInfo: @{
+			 @"LineNumber": [NSString stringWithFormat: @"%lu", (unsigned long)lineNumber],
+			 @"ContentLine": lineString
+			 }];
 }
 
 - (BOOL)parseWithString:(NSString *)aString error:(NSError **)error {
-	[self setObjects:[NSMutableArray array]];
+	self.objects = [NSMutableArray array];
 	[self clearParserObjects];
-	if (aString == nil) {
+	if (!aString)
 		return NO;
-	}
+
 	NSArray *foldingContentLines = [aString componentsSeparatedByCharactersInSet: NSCharacterSet.newlineCharacterSet];
 	NSMutableArray *contentLines = [NSMutableArray array];
 	for (NSString *foldingContentLine in foldingContentLines) {
-		if (foldingContentLine == nil) {
+		if (!foldingContentLine)
+			continue;
+
+		if (![CGICalendarContentLine IsFoldingLineString: foldingContentLine]) {
+			[contentLines addObject: [NSMutableString stringWithString: foldingContentLine]];
 			continue;
 		}
-		if ([CGICalendarContentLine IsFoldingLineString:foldingContentLine] == NO) {
-			[contentLines addObject:[NSMutableString stringWithString:foldingContentLine]];
+		NSMutableString *lastLineString = contentLines.lastObject;
+		if (!lastLineString)
 			continue;
-		}
-		NSMutableString *lastLineString = [contentLines lastObject];
-		if (lastLineString == nil) {
-			continue;
-		}
-		[lastLineString appendString:[foldingContentLine substringWithRange:NSMakeRange(1, ([foldingContentLine length] - 1))]];
+
+		[lastLineString appendString: [foldingContentLine substringWithRange: NSMakeRange(1, (foldingContentLine.length - 1))]];
 	}
 	NSUInteger contentLineNumber = 0;
 	for (NSString *contentLine in contentLines) {
 		contentLineNumber++;
-		CGICalendarContentLine *icalContentLine = [[CGICalendarContentLine alloc] initWithString:contentLine];
+		CGICalendarContentLine *icalContentLine = [[CGICalendarContentLine alloc] initWithString: contentLine];
 		CGICalendarComponent *icalParentComponent = [self peekParserObject];
 		// BEGIN
-		if ([icalContentLine isBegin]) {
+		if (icalContentLine.isBegin) {
 			CGICalendarComponent *icalComponent;
-			if (icalParentComponent == nil) {
-				icalComponent = [[CGICalendarObject alloc] init];
-				[self addObject:(CGICalendarObject *)icalComponent];
+			if (!icalParentComponent) {
+				icalComponent = [CGICalendarObject new];
+				[self addObject: (CGICalendarObject *)icalComponent];
 			} else {
-				icalComponent = [[CGICalendarComponent alloc] init];
-				[icalParentComponent addComponent:icalComponent];
+				icalComponent = [CGICalendarComponent new];
+				[icalParentComponent addComponent: icalComponent];
 			}
-			[icalComponent setType:[icalContentLine value]];
-			[self pushParserObject:icalComponent];
+			icalComponent.type = icalContentLine.value;
+			[self pushParserObject: icalComponent];
 			continue;
 		}
 		// END
-		if ([icalContentLine isEnd]) {
+		if (icalContentLine.isEnd) {
 			[self popParserObject];
 			continue;
 		}
 
-		NSString *propertyName = [icalContentLine name];
-		CGICalendarProperty *icalProperty = [icalParentComponent propertyForName:propertyName];
-		if (icalProperty == nil) {
-			icalProperty = [[CGICalendarProperty alloc] init];
-			[icalProperty setName:propertyName];
-			[icalParentComponent addProperty:icalProperty];
+		NSString *propertyName = icalContentLine.name;
+		CGICalendarProperty *icalProperty = [icalParentComponent propertyForName: propertyName];
+		if (!icalProperty) {
+			icalProperty = [CGICalendarProperty new];
+			icalProperty.name = propertyName;
+			[icalParentComponent addProperty: icalProperty];
 		}
-		[icalProperty setValue:[icalContentLine value]];
-		for (CGICalendarParameter *icalParameter in [icalContentLine parameters]) {
-			[icalProperty setParameterValue:[icalParameter value] forName:[icalParameter name]];
-		}
+		icalProperty.value = icalContentLine.value;
+		for (CGICalendarParameter *icalParameter in icalContentLine.parameters)
+			[icalProperty setParameterValue: icalParameter.value forName: icalParameter.name];
 	}
 	return YES;
 }
 
 - (BOOL)parseWithPath:(NSString *)path  error:(NSError **)error {
-	NSData *fileData = [NSData dataWithContentsOfFile:path];
-	if (fileData == nil) {
+	NSData *fileData = [NSData dataWithContentsOfFile: path];
+	if (!fileData)
 		return NO;
-	}
-	return [self parseWithString:[[NSString alloc] initWithData:fileData encoding:NSUTF8StringEncoding] error:error];
+
+	return [self parseWithString: [[NSString alloc] initWithData: fileData encoding: NSUTF8StringEncoding] error: error];
 }
 
 #pragma mark -
 #pragma mark Parser Stack Methods
 
 - (id)peekParserObject {
-	return [[self parserStack] lastObject];
+	return self.parserStack.lastObject;
 }
 
 - (id)popParserObject {
-	id lastObject = [[self parserStack] lastObject];
-	[[self parserStack] removeLastObject];
+	id lastObject = self.parserStack.lastObject;
+	[self.parserStack removeLastObject];
 	return lastObject;
 }
 
 - (void)pushParserObject:(id)object {
-	[[self parserStack] addObject:object];
+	[self.parserStack addObject: object];
 }
 
 - (void)clearParserObjects {
-	[self setParserStack:[NSMutableArray array]];
+	[self setParserStack: [NSMutableArray array]];
 }
 
 #pragma mark -
@@ -175,9 +174,9 @@ NSString * const CGICalendarFooterContentline = @"END:VCALENDAR";
 
 - (NSString *)description {
 	NSMutableString *descriptionString = [NSMutableString string];
-	for (CGICalendarObject *icalObject in [self objects]) {
-		[descriptionString appendString:[icalObject description]];
-	}
+	for (CGICalendarObject *icalObject in self.objects)
+		[descriptionString appendString: icalObject.description];
+
 	return descriptionString;
 }
 
@@ -185,15 +184,15 @@ NSString * const CGICalendarFooterContentline = @"END:VCALENDAR";
 #pragma mark File
 
 - (BOOL)writeToFile:(NSString *)path {
-	NSString *desc = [self description];
-	if (desc == nil) {
+	NSString *desc = self.description;
+	if (!desc)
 		return NO;
-	}
-	NSData *data = [desc dataUsingEncoding:NSUTF8StringEncoding];
-	if (data == nil) {
+
+	NSData *data = [desc dataUsingEncoding: NSUTF8StringEncoding];
+	if (!data)
 		return NO;
-	}
-	return [data writeToFile:path atomically:YES];
+
+	return [data writeToFile: path atomically: YES];
 }
 
 @end

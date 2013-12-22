@@ -37,38 +37,25 @@ CGICALTODO_DETAILVIEWCONTROLLER_SECTION_INFO_COUNT,
 
 @implementation CGDetailViewController
 
-@synthesize todo;
-@synthesize delegate;
-@synthesize summaryField;
-@synthesize descField;
-@synthesize modalMode;
-
 - (id)initWithTodo:(CGICalendarComponent *)aTodo {
-	self = [super initWithStyle:UITableViewStyleGrouped];
+	self = [super initWithStyle: UITableViewStyleGrouped];
 	if (self) {
-		[self setTodo:aTodo];
-		[self setModalMode:NO];
+		self.todo = aTodo;
+		self.modalMode = NO;
 		/* Summary Field */
-		[self setSummaryField:[self createTextFieldWithRect:CGRectMake(CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_XOFFSET,
-																	   CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_YOFFSET(self.tableView),
-																	   CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_WIDTH,
-																	   CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_HEIGHT)]];
-		[[self summaryField] setText:[aTodo summary]];
+		self.summaryField = [self createTextFieldWithRect: CGRectMake(CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_XOFFSET,
+																	  CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_YOFFSET(self.tableView),
+																	  CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_WIDTH,
+																	  CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_HEIGHT)];
+		self.summaryField.text = aTodo.summary;
 		/* Description Field */
-		[self setDescField:[self createTextViewWithRect:CGRectMake(CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_XOFFSET,
-																	   CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_YOFFSET(self.tableView),
-																	   CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_WIDTH,
-																	   [[self tableView] rowHeight] * CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_NOTESECTION_SCALE - (CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_YOFFSET(self.tableView) * 2))]];
-		[[self descField] setText:[aTodo notes]];
+		self.descField = [self createTextViewWithRect: CGRectMake(CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_XOFFSET,
+																  CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_YOFFSET(self.tableView),
+																  CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_WIDTH,
+																  self.tableView.rowHeight * CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_NOTESECTION_SCALE - (CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_YOFFSET(self.tableView) * 2))];
+		self.descField.text = aTodo.notes;
 	}
 	return self;
-}
-
-
-- (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
-	[super didReceiveMemoryWarning];
-	// Release any cached data, images, etc that aren't in use.
 }
 
 #pragma mark - View lifecycle
@@ -76,38 +63,17 @@ CGICALTODO_DETAILVIEWCONTROLLER_SECTION_INFO_COUNT,
 - (void)viewDidLoad {
 	[super viewDidLoad];
 
-	[self setTitle:[todo summary]];
-	[[self navigationController] setToolbarHidden:NO];
-	if ([self isModalMode]) {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doDone)];
-		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(doCancel)];
+	self.title = self.todo.summary;
+	self.navigationController.toolbarHidden = NO;
+	if (self.isModalMode) {
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone target: self action: @selector(doDone)];
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action: @selector(doCancel)];
 	} else {
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doDone)];
-		 [self setToolbarItems:[NSArray arrayWithObjects:
-		 [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],         [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(doCancel)],         nil] animated:NO];
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone target: self action: @selector(doDone)];
+		 [self setToolbarItems: @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+								  [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCancel target: self action: @selector(doCancel)]]
+					  animated: NO];
 	}
-}
-
-- (void)viewDidUnload {
-	[super viewDidUnload];
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-	[super viewDidDisappear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -146,8 +112,8 @@ CGICALTODO_DETAILVIEWCONTROLLER_SECTION_INFO_COUNT,
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	CGFloat rowHeight = [tableView rowHeight];
-	switch ([indexPath section]) {
+	CGFloat rowHeight = tableView.rowHeight;
+	switch (indexPath.section) {
 		case CGICALTODO_DETAILVIEWCONTROLLER_SECTION_NOTES:
 			rowHeight *= CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_NOTESECTION_SCALE;
 			break;
@@ -157,81 +123,78 @@ CGICALTODO_DETAILVIEWCONTROLLER_SECTION_INFO_COUNT,
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	static NSString *CellIdentifier = @"Cell";
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-	if (cell == nil) {
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:CellIdentifier];
-	}
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifier];
+	if (!cell)
+		cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleValue2 reuseIdentifier: CellIdentifier];
+
 	// Configure the cell...
-	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	NSString *titleString = @"";
 	NSString *detailTitleString = @"";
-	switch ([indexPath section]) {
+	switch (indexPath.section) {
 		case CGICALTODO_DETAILVIEWCONTROLLER_SECTION_SUMMARY:
-			[cell.contentView addSubview:[self summaryField]];
+			[cell.contentView addSubview: self.summaryField];
 			break;
 		case CGICALTODO_DETAILVIEWCONTROLLER_SECTION_INFO:
-			switch ([indexPath row]) {
+			switch (indexPath.row) {
 				case CGICALTODO_DETAILVIEWCONTROLLER_SECTION_INFO_CREATED:
 					titleString = @"Created";
-					detailTitleString = [[todo created] descriptionISO8601];
+					detailTitleString = self.todo.created.descriptionISO8601;
 					break;
 				case CGICALTODO_DETAILVIEWCONTROLLER_SECTION_INFO_MODIFIED:
 					titleString = @"Modified";
-					detailTitleString = [[todo lastModified] descriptionISO8601];
+					detailTitleString = self.todo.lastModified.descriptionISO8601;
 					break;
 				case CGICALTODO_DETAILVIEWCONTROLLER_SECTION_INFO_COMPLETED:
 					titleString = @"Completed";
-					detailTitleString = [[todo completed] descriptionISO8601];
+					detailTitleString = self.todo.completed.descriptionISO8601;
 					break;
 				default:
 					break;
 			}
 		case CGICALTODO_DETAILVIEWCONTROLLER_SECTION_NOTES:
-			[cell.contentView addSubview:[self descField]];
+			[cell.contentView addSubview: self.descField];
 			break;
 	}
-	[[cell textLabel] setText:titleString];
-	[[cell detailTextLabel] setText:detailTitleString];
+	cell.textLabel.text = titleString;
+	cell.detailTextLabel.text = detailTitleString;
 	return cell;
 }
 
 #pragma mark - Button Actions
 
 - (void)doDone {
-	[[self todo] incrementSequenceNumber];
-	[[self todo] setSummary:[summaryField text]];
-	[[self todo] setNotes:[descField text]];
-	[[self todo] setLastModified:[NSDate date]];
+	[self.todo incrementSequenceNumber];
+	self.todo.summary = self.summaryField.text;
+	self.todo.notes = self.descField.text;
+	self.todo.lastModified = NSDate.date;
 
-	if ([self delegate]) {
-		[[self delegate] icalTodoDetailViewController:self didFinished:[self todo]];
-	}
-	if ([self isModalMode]) {
-		[self dismissViewControllerAnimated:YES completion:nil];
-	} else {
-		[[self navigationController] popViewControllerAnimated:YES];
-	}
+	if (self.delegate)
+		[self.delegate icalTodoDetailViewController: self didFinished: self.todo];
+	if (self.isModalMode)
+		[self dismissViewControllerAnimated: YES completion: nil];
+	else
+		[self.navigationController popViewControllerAnimated: YES];
 }
 
 - (void)doCancel {
-	if ([self delegate]) {
-		[[self delegate] icalTodoDetailViewController:self didCanceled:[self todo]];
-	}
-	if ([self isModalMode]) {
-		[self dismissViewControllerAnimated:YES completion:nil];
-	} else {
-		[[self navigationController] popViewControllerAnimated:YES];
-	}
+	if (self.delegate)
+		[self.delegate icalTodoDetailViewController: self didCanceled: self.todo];
+
+	if (self.isModalMode)
+		[self dismissViewControllerAnimated: YES completion: nil];
+	else
+		[self.navigationController popViewControllerAnimated: YES];
 }
 
 #pragma mark - TextField
 
 - (UITextField *)createTextFieldWithRect:(CGRect)frame {
-	UITextField *textField = [[UITextField alloc] initWithFrame:frame];
+	UITextField *textField = [[UITextField alloc] initWithFrame: frame];
 	textField.borderStyle = UITextBorderStyleNone;
-	textField.textColor = [UIColor blackColor];
+	textField.textColor = UIColor.blackColor;
 	textField.font = [UIFont systemFontOfSize:CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_FONTSIZE];
-	textField.backgroundColor = [UIColor whiteColor];
+	textField.backgroundColor = UIColor.whiteColor;
 	textField.autocorrectionType = UITextAutocorrectionTypeNo;
 	textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	textField.keyboardType = UIKeyboardTypeDefault;
@@ -248,10 +211,10 @@ CGICALTODO_DETAILVIEWCONTROLLER_SECTION_INFO_COUNT,
 }
 
 - (UITextView *)createTextViewWithRect:(CGRect)frame {
-	UITextView *textView = [[UITextView alloc] initWithFrame:frame];
-	textView.textColor = [UIColor blackColor];
-	textView.font = [UIFont systemFontOfSize:CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_FONTSIZE];
-	textView.backgroundColor = [UIColor whiteColor];
+	UITextView *textView = [[UITextView alloc] initWithFrame: frame];
+	textView.textColor = UIColor.blackColor;
+	textView.font = [UIFont systemFontOfSize: CGICALTODO_DETAILVIEWCONTROLLER_TEXTFIELD_FONTSIZE];
+	textView.backgroundColor = UIColor.whiteColor;
 	textView.autocorrectionType = UITextAutocorrectionTypeNo;
 	textView.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	textView.keyboardType = UIReturnKeyDone;

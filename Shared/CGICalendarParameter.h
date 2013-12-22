@@ -11,8 +11,8 @@
 @interface CGICalendarParameter : CGICalendarValue
 
 - (id)initWithString:(NSString *)aString;
-- (void)setString:(NSString *)aString;
-- (NSString *) string;
-- (NSString *)description;
+
+@property (nonatomic, strong) NSString *string;
+@property (nonatomic, readonly) NSString *description;
 
 @end

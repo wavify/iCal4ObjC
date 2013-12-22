@@ -38,7 +38,7 @@ NSString * const CGICalObjCSDKTTestsFileSample01 = \
 NSString * const CGICalObjCSDKTTestsFileName01 = @"sample.ical";
 
 - (void)testWriteFile {
-	CGICalendar *ical = [[CGICalendar alloc] init];
+	CGICalendar *ical = [CGICalendar new];
 	BOOL parseResult = [ical parseWithString:CGICalObjCSDKTTestsFileSample01 error:nil];
 	STAssertTrue(parseResult, @"");
 

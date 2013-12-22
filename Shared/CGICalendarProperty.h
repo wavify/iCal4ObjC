@@ -47,7 +47,7 @@ typedef enum : NSUInteger {
 
 @interface CGICalendarProperty : CGICalendarValue
 
-@property (strong) NSMutableArray *parameters;
+@property (nonatomic, strong) NSMutableArray *parameters;
 
 - (BOOL)hasParameterForName:(NSString *)name;
 - (void)addParameter:(CGICalendarParameter *)parameter;
@@ -66,15 +66,13 @@ typedef enum : NSUInteger {
 
 - (CGICalendarParameter *)parameterAtIndex:(NSUInteger)index;
 - (CGICalendarParameter *)parameterForName:(NSString *)name;
-- (NSArray *)allParameterKeys;
+@property (nonatomic, readonly) NSArray *allParameterKeys;
 - (NSString *)parameterValueForName:(NSString *)name;
 - (NSDate *)parameterDateForName:(NSString *)name;
 - (NSInteger)parameterIntegerForName:(NSString *)name;
 - (float)parameterFloatForName:(NSString *)name;
 
-- (void)setParticipationStatus:(CGICalendarParticipationStatus)value;
-- (CGICalendarParticipationStatus)participationStatus;
-
-- (NSDate *)dateValue;
+@property (nonatomic, assign) CGICalendarParticipationStatus participationStatus;
+@property (nonatomic, readonly) NSDate *dateValue;
 
 @end

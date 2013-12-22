@@ -20,12 +20,12 @@ NSUInteger const CGTableViewControllerCellCheckbuttonTag = 1;
 
 @interface CGTableViewController ()
 
-@property (strong) NSString *calendarPath;
-@property (strong) CGICalendar *calendar;
-@property (strong) NSMutableArray *todos;
-@property (strong) UIImage *chkBaseImage;
-@property (strong) UIImage *chkNoneImage;
-@property (strong) UIImage *chkDoneImage;
+@property (nonatomic, strong) NSString *calendarPath;
+@property (nonatomic, strong) CGICalendar *calendar;
+@property (nonatomic, strong) NSMutableArray *todos;
+@property (nonatomic, strong) UIImage *chkBaseImage;
+@property (nonatomic, strong) UIImage *chkNoneImage;
+@property (nonatomic, strong) UIImage *chkDoneImage;
 
 - (CGICalendarObject *)firstCalendarObject;
 - (void)reloadTodoComponents;
@@ -44,41 +44,34 @@ NSUInteger const CGTableViewControllerCellCheckbuttonTag = 1;
 	return self;
 }
 
-- (void)didReceiveMemoryWarning {
-	// Releases the view if it doesn't have a superview.
-	[super didReceiveMemoryWarning];
-
-	// Release any cached data, images, etc that aren't in use.
-}
-
 #pragma mark - iCalendar methods
 
 - (void)setPath:(NSString *)path {
 	[self setCalendarPath:path];
-	[self setCalendar:[[CGICalendar alloc] init]];
+	[self setCalendar:[CGICalendar new]];
 	[[self calendar] parseWithPath:path error:nil];
 }
 
 - (CGICalendarObject *)firstCalendarObject {
-	if ([[[self calendar] objects] count] <= 0)
-		[[self calendar] addObject:[CGICalendarObject object]];
-   return [[self calendar] objectAtIndex:0];
+	if (self.calendar.objects.count <= 0)
+		[self.calendar addObject: CGICalendarObject.object];
+   return [self.calendar objectAtIndex: 0];;
 }
 
 - (BOOL)saveCalendar {
-	return [[self calendar] writeToFile:[self calendarPath]];
+	return [self.calendar writeToFile: self.calendarPath];
 }
 
 - (void)reloadTodoComponents {
-	CGICalendarObject *icalObj = [self firstCalendarObject];
-	[self setTodos:[NSMutableArray arrayWithArray:[icalObj todos]]];
+	CGICalendarObject *icalObj = self.firstCalendarObject;
+	self.todos = icalObj.todos.mutableCopy;
 }
 
 - (void)setCheckButtonHidden:(BOOL)hidden indexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = [[self tableView] cellForRowAtIndexPath:indexPath];
-	CGViewCheckButton *checkButton = (CGViewCheckButton *)[cell viewWithTag:CGTableViewControllerCellCheckbuttonTag];
-	[checkButton setHidden:hidden];
-	[[cell imageView] setImage:(hidden ? nil : [self chkBaseImage])];
+	UITableViewCell *cell = [self.tableView cellForRowAtIndexPath: indexPath];
+	CGViewCheckButton *checkButton = (CGViewCheckButton *)[cell viewWithTag: CGTableViewControllerCellCheckbuttonTag];
+	checkButton.hidden = hidden;
+	cell.imageView.image = (hidden ? nil : self.chkBaseImage);
 }
 
 #pragma mark - View lifecycle
@@ -86,10 +79,10 @@ NSUInteger const CGTableViewControllerCellCheckbuttonTag = 1;
 - (void)viewDidLoad {
 	[super viewDidLoad];
 
-	[self setTitle:CGTableViewControllerTitle];
+	self.title = CGTableViewControllerTitle;
 
-	[self setChkNoneImage:[UIImage imageNamed:CGTableViewControllerImageCheckedNone]];
-	[self setChkDoneImage:[UIImage imageNamed:CGTableViewControllerImageCheckedDone]];
+	self.chkNoneImage = [UIImage imageNamed: CGTableViewControllerImageCheckedNone];
+	self.chkDoneImage = [UIImage imageNamed: CGTableViewControllerImageCheckedDone];
 
 	// Uncomment the following line to clear selection between presentations.
 	// self.clearsSelectionOnViewWillAppear = NO;
@@ -97,37 +90,14 @@ NSUInteger const CGTableViewControllerCellCheckbuttonTag = 1;
 	// Uncomment the following line to display an Edit button in the navigation bar for this view controller.
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
-	[[self navigationController] setToolbarHidden:NO];
-	[self setToolbarItems:[NSArray arrayWithObjects:
-						   [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(doRefresh)],
-						   [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
-						   [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(doAdd)],
-						   nil] animated:NO];
+	self.navigationController.toolbarHidden = NO;
+	[self setToolbarItems: @[[[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemRefresh target: self action: @selector(doRefresh)],
+							 [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemFlexibleSpace target: nil action: nil],
+							 [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAdd target: self action: @selector(doAdd)]]
+				 animated: NO];
 
-	NSString *icalPath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"MyToDo.ics"];
-	[self setPath:icalPath];
-}
-
-- (void)viewDidUnload {
-	[super viewDidUnload];
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-	[super viewDidDisappear:animated];
+	NSString *icalPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent: @"MyToDo.ics"];
+	[self setPath: icalPath];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -144,36 +114,35 @@ NSUInteger const CGTableViewControllerCellCheckbuttonTag = 1;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	[self reloadTodoComponents];
 
-	return [[self todos] count];
+	return self.todos.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	static NSString *CellIdentifier = @"Cell";
 
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-	if (cell == nil) {
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-	}
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifier];
+	if (!cell)
+		cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleSubtitle reuseIdentifier: CellIdentifier];
 
-	[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-	CGICalendarComponent *todoComp = [[self todos] objectAtIndex:[indexPath row]];
+	CGICalendarComponent *todoComp = self.todos[indexPath.row];
 
-	[[cell textLabel] setText:[todoComp summary]];
-	[[cell detailTextLabel] setText:[[todoComp created] descriptionISO8601]];
+	cell.textLabel.text = todoComp.summary;
+	cell.detailTextLabel.text = todoComp.created.descriptionISO8601;
 
-	[[cell imageView] setImage:[self chkBaseImage]];
-	[[cell imageView] setImage:[todoComp hasPropertyForName: CGICalendarPropertyCompleted] ? [self chkDoneImage] : [self chkNoneImage]];
+	cell.imageView.image = self.chkBaseImage;
+	cell.imageView.image = [todoComp hasPropertyForName: CGICalendarPropertyCompleted] ? self.chkDoneImage : self.chkNoneImage;
 
-	CGViewCheckButton *todoCheckButton = [[CGViewCheckButton alloc] initWithTodoComponent:todoComp];
-	[todoCheckButton addTarget:self action:@selector(checkButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-	//[todoCheckButton setImage:[todoComp hasPropertyForName:CG_ICALENDAR_PROERTY_COMPLETED] ? [self chkDoneImage] : [self chkNoneImage] forState:UIControlStateNormal];
-	[todoCheckButton setTag:CGTableViewControllerCellCheckbuttonTag];
-	[todoCheckButton setFrame:CGRectMake(CGTableViewControllerImageOffset, //cell.imageView.frame.origin.x,
-										 CGTableViewControllerImageOffset, //cell.imageView.frame.origin.y,
-										 todoCheckButton.frame.size.width,
-										 todoCheckButton.frame.size.height)];
-	[cell addSubview:todoCheckButton];
+	CGViewCheckButton *todoCheckButton = [[CGViewCheckButton alloc] initWithTodoComponent: todoComp];
+	[todoCheckButton addTarget: self action: @selector(checkButtonAction:) forControlEvents: UIControlEventTouchUpInside];
+	//[todoCheckButton setImage:[todoComp hasPropertyForName:CG_ICALENDAR_PROERTY_COMPLETED] ? self.chkDoneImage : self.chkNoneImage forState: UIControlStateNormal];
+	todoCheckButton.tag = CGTableViewControllerCellCheckbuttonTag;
+	todoCheckButton.frame = CGRectMake(CGTableViewControllerImageOffset, //cell.imageView.frame.origin.x,
+									   CGTableViewControllerImageOffset, //cell.imageView.frame.origin.y,
+									   todoCheckButton.frame.size.width,
+									   todoCheckButton.frame.size.height);
+	[cell addSubview: todoCheckButton];
 
 	return cell;
 }
@@ -198,14 +167,14 @@ NSUInteger const CGTableViewControllerCellCheckbuttonTag = 1;
 
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		// Delete the row from the data source
-		CGICalendarObject *icalObj = [self firstCalendarObject];
-		CGICalendarComponent *todoComp = [[self todos] objectAtIndex:[indexPath row]];
+		CGICalendarObject *icalObj = self.firstCalendarObject;
+		CGICalendarComponent *todoComp = self.todos[indexPath.row];
 
-		[[self todos] removeObject:todoComp];
+		[self.todos removeObject:todoComp];
 		[icalObj removeComponent:todoComp];
 		[self saveCalendar];
 
-		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+		[tableView deleteRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
 	}
 	else if (editingStyle == UITableViewCellEditingStyleInsert) {
 		// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
@@ -215,12 +184,12 @@ NSUInteger const CGTableViewControllerCellCheckbuttonTag = 1;
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
 	if(fromIndexPath.section == toIndexPath.section) {
-	  if([self todos] && toIndexPath.row < [[self todos] count]) {
-		  CGICalendarObject *icalObj = [self firstCalendarObject];
-		  CGICalendarComponent *todoComp = [[self todos] objectAtIndex:[fromIndexPath row]];
+	  if(self.todos && toIndexPath.row < self.todos.count) {
+		  CGICalendarObject *icalObj = self.firstCalendarObject;
+		  CGICalendarComponent *todoComp = [self.todos objectAtIndex: fromIndexPath.row];
 
-		  [[self todos] removeObject:todoComp];
-		  [[self todos] insertObject:todoComp atIndex:toIndexPath.row];
+		  [self.todos removeObject:todoComp];
+		  [self.todos insertObject:todoComp atIndex:toIndexPath.row];
 
 		  [icalObj removeComponent:todoComp];
 		  [icalObj insertComponent:todoComp atIndex:toIndexPath.row];
@@ -239,24 +208,24 @@ NSUInteger const CGTableViewControllerCellCheckbuttonTag = 1;
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	CGICalendarComponent *todoComp = [[self todos] objectAtIndex:[indexPath row]];
+	CGICalendarComponent *todoComp = self.todos[indexPath.row];
 	CGDetailViewController *todoDetailViewController = [[CGDetailViewController alloc] initWithTodo:todoComp];
-	[todoDetailViewController setDelegate:self];
-	[[self navigationController] pushViewController:todoDetailViewController animated:YES];
+	todoDetailViewController.delegate = self;
+	[self.navigationController pushViewController:todoDetailViewController animated:YES];
 }
 
 #pragma mark -
 #pragma mark - Button Actions
 
 - (void)doRefresh {
-	[[self tableView] reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)doAdd {
 	CGICalendarComponent *newTodoComp = [CGICalendarComponent todo];
 	CGDetailViewController *todoDetailViewController = [[CGDetailViewController alloc] initWithTodo:newTodoComp];
-	[todoDetailViewController setDelegate:self];
-	[todoDetailViewController setModalMode:YES];
+	todoDetailViewController.delegate = self;
+	todoDetailViewController.modalMode = YES;
 	[self presentViewController:[[UINavigationController alloc] initWithRootViewController:todoDetailViewController]
 					   animated:YES
 					 completion:nil];
@@ -266,14 +235,14 @@ NSUInteger const CGTableViewControllerCellCheckbuttonTag = 1;
 #pragma mark - CGDetailViewController Delegate
 
 - (void)icalTodoDetailViewController:(CGDetailViewController *)icalTodoDetailViewController didFinished:(CGICalendarComponent *)todo {
-	CGICalendarObject *icalObj = [self firstCalendarObject];
+	CGICalendarObject *icalObj = self.firstCalendarObject;
 
 	if ([icalObj indexOfComponent:todo] == NSNotFound)
 		[icalObj addComponent:todo];
 
 	[self saveCalendar];
 
-	[[self tableView] reloadData];
+	[self.tableView reloadData];
 }
 
 - (void)icalTodoDetailViewController:(CGDetailViewController *)icalTodoDetailViewController didCanceled:(CGICalendarComponent *)todo {
@@ -285,16 +254,16 @@ NSUInteger const CGTableViewControllerCellCheckbuttonTag = 1;
 
 -(void)checkButtonAction:(id)inSender {
 	CGViewCheckButton *todoCheckButton = (CGViewCheckButton *)inSender;
-	CGICalendarComponent *todoComp = [todoCheckButton todoComponent];
-	UITableViewCell *cell = (UITableViewCell *)[todoCheckButton superview];
+	CGICalendarComponent *todoComp = todoCheckButton.todoComponent;
+	UITableViewCell *cell = (UITableViewCell *)todoCheckButton.superview;
 
 	if ([todoComp hasPropertyForName:CGICalendarPropertyCompleted]) {
-		[[cell imageView] setImage:[self chkNoneImage]];
+		cell.imageView.image = self.chkNoneImage;
 		[todoComp removePropertyForName:CGICalendarPropertyCompleted];
 	}
 	else {
-		[[cell imageView] setImage:[self chkDoneImage]];
-		[todoComp setCompleted:[NSDate date]];
+		cell.imageView.image = self.chkDoneImage;
+		todoComp.completed = NSDate.date;
 	}
 
 	[self saveCalendar];

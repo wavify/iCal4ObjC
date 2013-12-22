@@ -63,7 +63,6 @@
 		C2F0A3B11681031200F382C0 /* libiCal4ObjC_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D044081680F99E002ED226 /* libiCal4ObjC_iOS.a */; };
 		C2F0A3D1168106A600F382C0 /* CGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F0A3CE168106A600F382C0 /* CGAppDelegate.m */; };
 		C2F0A3DB1681084B00F382C0 /* CGDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F0A3D41681084A00F382C0 /* CGDetailViewController.m */; };
-		C2F0A3DC1681084B00F382C0 /* CGNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F0A3D61681084A00F382C0 /* CGNewViewController.m */; };
 		C2F0A3DD1681084B00F382C0 /* CGViewCheckButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F0A3D81681084B00F382C0 /* CGViewCheckButton.m */; };
 		C2F0A3DE1681084B00F382C0 /* CGTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F0A3DA1681084B00F382C0 /* CGTableViewController.m */; };
 		C2F0A3EA1681092200F382C0 /* chk_done.png in Resources */ = {isa = PBXBuildFile; fileRef = C2F0A3E01681092200F382C0 /* chk_done.png */; };
@@ -140,8 +139,6 @@
 		C2F0A3CE168106A600F382C0 /* CGAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CGAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C2F0A3D31681084A00F382C0 /* CGDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGDetailViewController.h; sourceTree = "<group>"; };
 		C2F0A3D41681084A00F382C0 /* CGDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CGDetailViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		C2F0A3D51681084A00F382C0 /* CGNewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGNewViewController.h; sourceTree = "<group>"; };
-		C2F0A3D61681084A00F382C0 /* CGNewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGNewViewController.m; sourceTree = "<group>"; };
 		C2F0A3D71681084B00F382C0 /* CGViewCheckButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGViewCheckButton.h; sourceTree = "<group>"; };
 		C2F0A3D81681084B00F382C0 /* CGViewCheckButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGViewCheckButton.m; sourceTree = "<group>"; };
 		C2F0A3D91681084B00F382C0 /* CGTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGTableViewController.h; sourceTree = "<group>"; };
@@ -354,8 +351,6 @@
 			children = (
 				C2F0A3D31681084A00F382C0 /* CGDetailViewController.h */,
 				C2F0A3D41681084A00F382C0 /* CGDetailViewController.m */,
-				C2F0A3D51681084A00F382C0 /* CGNewViewController.h */,
-				C2F0A3D61681084A00F382C0 /* CGNewViewController.m */,
 				C2F0A3D71681084B00F382C0 /* CGViewCheckButton.h */,
 				C2F0A3D81681084B00F382C0 /* CGViewCheckButton.m */,
 				C2F0A3D91681084B00F382C0 /* CGTableViewController.h */,
@@ -618,7 +613,6 @@
 				C2D04498168100D0002ED226 /* main.m in Sources */,
 				C2F0A3D1168106A600F382C0 /* CGAppDelegate.m in Sources */,
 				C2F0A3DB1681084B00F382C0 /* CGDetailViewController.m in Sources */,
-				C2F0A3DC1681084B00F382C0 /* CGNewViewController.m in Sources */,
 				C2F0A3DD1681084B00F382C0 /* CGViewCheckButton.m in Sources */,
 				C2F0A3DE1681084B00F382C0 /* CGTableViewController.m in Sources */,
 			);

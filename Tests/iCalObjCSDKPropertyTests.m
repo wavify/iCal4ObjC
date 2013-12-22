@@ -15,26 +15,26 @@ NSString * const CGICalObjCSDKTTestsPropertySample01Key = @"TESTKEY";
 NSString * const CGICalObjCSDKTTestsPropertySample01Value = @"TESTVALUE";
 
 - (void)testPropertyAdd {
-	CGICalendarComponent *icalComp = [[CGICalendarComponent alloc] init];
-	STAssertEquals([[icalComp properties] count], (NSUInteger)0, @"");
+	CGICalendarComponent *icalComp = [CGICalendarComponent new];
+	STAssertEquals(icalComp.properties.count, (NSUInteger)0, @"");
 	STAssertNil([icalComp propertyValueForName:CGICalObjCSDKTTestsPropertySample01Key], @"");
 	STAssertFalse([icalComp hasPropertyForName:CGICalObjCSDKTTestsPropertySample01Key], @"");
 	[icalComp setPropertyValue:CGICalObjCSDKTTestsPropertySample01Value forName:CGICalObjCSDKTTestsPropertySample01Key];
-	STAssertEquals([[icalComp properties] count], (NSUInteger)1, @"");
+	STAssertEquals(icalComp.properties.count, (NSUInteger)1, @"");
 	STAssertNotNil([icalComp propertyValueForName:CGICalObjCSDKTTestsPropertySample01Key], @"");
 	STAssertEqualObjects([icalComp propertyValueForName:CGICalObjCSDKTTestsPropertySample01Key], CGICalObjCSDKTTestsPropertySample01Value, @"");
 	STAssertTrue([icalComp hasPropertyForName:CGICalObjCSDKTTestsPropertySample01Key], @"");
 	[icalComp removePropertyForName:CGICalObjCSDKTTestsPropertySample01Key];
-	STAssertEquals([[icalComp properties] count], (NSUInteger)0, @"");
+	STAssertEquals(icalComp.properties.count, (NSUInteger)0, @"");
 	STAssertNil([icalComp propertyValueForName:CGICalObjCSDKTTestsPropertySample01Key], @"");
 	STAssertFalse([icalComp hasPropertyForName:CGICalObjCSDKTTestsPropertySample01Key], @"");
 }
 
 - (void)testPropertyParticipationStatus {
 	for (NSUInteger n = CGICalendarParticipationStatusUnkown; n <= CGICalendarParticipationStatusInProcess; n++) {
-		CGICalendarProperty *icalProp = [[CGICalendarProperty alloc] init];
-		[icalProp setParticipationStatus:n];
-		STAssertEquals([icalProp participationStatus], n, [NSString stringWithFormat:@"[%d] != %@", [icalProp participationStatus], [icalProp value]]);
+		CGICalendarProperty *icalProp = [CGICalendarProperty new];
+		icalProp.participationStatus = n;
+		STAssertEquals(icalProp.participationStatus, n, [NSString stringWithFormat:@"[%d] != %@", icalProp.participationStatus, icalProp.value]);
 	}
 }
 

@@ -17,7 +17,7 @@ extern NSString * const CGICalendarFooterContentline;
 
 @interface CGICalendar : NSObject
 
-@property (strong) NSMutableArray *objects;
+@property (nonatomic, strong) NSMutableArray *objects;
 
 + (NSString *)UUID;
 
@@ -31,7 +31,7 @@ extern NSString * const CGICalendarFooterContentline;
 - (void)addObject:(CGICalendarObject *)object;
 - (CGICalendarObject *)objectAtIndex:(NSUInteger)index;
 
-- (NSString *)description;
+@property (nonatomic, readonly) NSString *description;
 
 - (BOOL)writeToFile:(NSString *)path;
 

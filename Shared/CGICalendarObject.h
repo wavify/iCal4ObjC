@@ -23,18 +23,14 @@ extern NSString * const CGICalendarObjectProdidDefault;
 - (id)initWithProdid:(NSString *)prodid;
 - (id)initWithProdid:(NSString *)prodid version:(NSString *)version;
 
-- (void)setVersion:(NSString *)version;
-- (NSString *)version;
-
-- (void)setProdid:(NSString *)prodid;
-- (NSString *)prodid;
+@property (nonatomic, strong) NSString *version;
+@property (nonatomic, strong) NSString *prodid;
 
 - (NSArray *)componentsWithType:(NSString *)type;
-- (NSArray *)events;
-- (NSArray *)todos;
-- (NSArray *)journals;
-- (NSArray *)freebusies;
-- (NSArray *)timezones;
+@property (nonatomic, readonly) NSArray *events;
+@property (nonatomic, readonly) NSArray *todos;
+@property (nonatomic, readonly) NSArray *journals;
+@property (nonatomic, readonly) NSArray *freebusies;
+@property (nonatomic, readonly) NSArray *timezones;
 
 @end
-

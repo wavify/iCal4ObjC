@@ -27,12 +27,12 @@ typedef enum : NSUInteger {
 
 @interface CGICalendarValue : NSObject
 
-@property (assign) CGICalendarValueType type;
-@property (strong) NSString *name;
-@property (strong) NSString *value;
+@property (nonatomic, assign) CGICalendarValueType type;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *value;
 
-- (BOOL)hasName;
-- (BOOL)hasValue;
+@property (nonatomic, readonly) BOOL hasName;
+@property (nonatomic, readonly) BOOL hasValue;
 
 - (BOOL)isName:(NSString *)aName;
 - (BOOL)isValue:(NSString *)aValue;

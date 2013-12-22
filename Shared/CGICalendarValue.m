@@ -11,50 +11,45 @@
 @implementation CGICalendarValue
 
 - (BOOL)hasName {
-	if ([self name] != nil && 0 < [[self name] length]) {
-		return YES;
-	}
-	return NO;
+	return (self.name && self.name.length > 0);
 }
 
 - (BOOL)hasValue {
-	if ([self value] != nil && 0 < [[self value] length]) {
-		return YES;
-	}
-	return NO;
+	return (self.value && self.value.length > 0);
 }
 
 - (BOOL)isName:(NSString *)aName {
-	if (aName == nil || [aName length] <= 0) {
+	if (!aName || aName.length <= 0)
 		return NO;
-	}
-	return [aName isEqualToString:[self name]];
+
+	return [aName isEqualToString: self.name];
 }
 
 - (BOOL)isValue:(NSString *)aValue {
-	if (aValue == nil || [aValue length] <= 0) {
+	if (!aValue || aValue.length <= 0)
 		return NO;
-	}
-	return [aValue isEqualToString:[self value]];
+
+	return [aValue isEqualToString: self.value];
 }
 
 - (void)setObject:(id)aValue {
-	[self setValue:[self.value description]];
+	self.value = [aValue description];
 }
 
 - (void)setDate:(NSDate *)aValue {
-	[self setValue:[aValue descriptionICalendar]];
+	self.value = aValue.descriptionICalendar;
 }
 
 - (NSDate *)dateValue {
-	return [NSDate dateWithICalendarString:[self value]];
+	return [NSDate dateWithICalendarString: self.value];
 }
 
 - (NSInteger)integerValue {
-	return [[self value] integerValue];
+	return self.value.integerValue;
 }
 
 - (float)floatValue {
-	return [[self value] floatValue];}
+	return self.value.floatValue;
+}
 
 @end

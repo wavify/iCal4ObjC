@@ -79,76 +79,70 @@ NSString * const CGICalendarContentlineComponentVtimezone = @"VTIMEZONE";
 @implementation CGICalendarContentLine
 
 + (BOOL)IsFoldingLineString:(NSString *)aString {
-	if ([aString hasPrefix:CGICalendarContentlineFoldingSpace] || [aString hasPrefix:CGICalendarContentlineFoldingTab])
-		return YES;
-	return NO;
+	return ([aString hasPrefix: CGICalendarContentlineFoldingSpace] || [aString hasPrefix: CGICalendarContentlineFoldingTab]);
 }
 
 + (id)contentLineWithString:(NSString *)aString {
-	CGICalendarContentLine *icalContentLine = [[CGICalendarContentLine alloc] initWithString:aString];
-	return icalContentLine;
+	return [[CGICalendarContentLine alloc] initWithString: aString];
 }
 
 - (id)initWithString:(NSString *)aString {
 	if ((self = [self init])) {
-		[self setString:aString];
+		self.string = aString;
 	}
 	return self;
 }
 
 - (void)setString:(NSString *)aString {
-	NSString *nowNewLineString = [aString stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-	NSArray *values = [nowNewLineString componentsSeparatedByString:CGICalendarContentlineDelimiter];
-	NSUInteger valuesCount = [values count];
-	if (valuesCount < 2) {
+	NSString *nowNewLineString = [aString stringByTrimmingCharactersInSet: NSCharacterSet.newlineCharacterSet];
+	NSArray *values = [nowNewLineString componentsSeparatedByString: CGICalendarContentlineDelimiter];
+	NSUInteger valuesCount = values.count;
+	if (valuesCount < 2)
 		return;
-	}
-	NSArray *nameParameters = [[values objectAtIndex:0] componentsSeparatedByString:CGICalendarContentlineNameparamDelimiter];
+
+	NSArray *nameParameters = [values[0] componentsSeparatedByString: CGICalendarContentlineNameparamDelimiter];
 	NSMutableArray *parameters = [NSMutableArray array];
-	NSUInteger nameParametersCount = [nameParameters count];
+	NSUInteger nameParametersCount = nameParameters.count;
 	for (NSUInteger n = 0; n < nameParametersCount; n++) {
 		if (n == 0) {
-			[self setName:[nameParameters objectAtIndex:0]];
+			self.name = nameParameters[0];
 			continue;
 		}
-		CGICalendarParameter *icalParam = [[CGICalendarParameter alloc] initWithString:[nameParameters objectAtIndex:n]];
-		[parameters addObject:icalParam];
+		CGICalendarParameter *icalParam = [[CGICalendarParameter alloc] initWithString: nameParameters[n]];
+		[parameters addObject: icalParam];
 	}
-	[self setParameters:parameters];
+	self.parameters = parameters;
 
 	NSMutableString *valueString = [NSMutableString string];
 	for (NSUInteger n = 1; n < valuesCount; n++) {
-		if (1 < n) {
-			[valueString appendString:CGICalendarContentlineDelimiter];
-		}
-		[valueString appendString:[values objectAtIndex:n]];
+		if (1 < n)
+			[valueString appendString: CGICalendarContentlineDelimiter];
+		[valueString appendString: values[n]];
 	}
-	[self setValue:valueString];
+	self.value = valueString;
 }
 
 - (NSString *)description {
 	NSMutableString *contentLine = [NSMutableString string];
-	if ([self hasName]) {
-		[contentLine appendString:[self name]];
+	if (self.hasName)
+		[contentLine appendString: self.name];
+	for (CGICalendarParameter *param in self.parameters) {
+		[contentLine appendString: CGICalendarContentlineNameparamDelimiter];
+		[contentLine appendString: param.string];
 	}
-	for (CGICalendarParameter *param in [self parameters]) {
-		[contentLine appendString:CGICalendarContentlineNameparamDelimiter];
-		[contentLine appendString:[param string]];
-	}
-	[contentLine appendString:CGICalendarContentlineDelimiter];
-	if ([self hasValue]) {
-		[contentLine appendString:[self value]];
-	}
-	[contentLine appendString:CGICalendarContentlineDelimiter];
+	[contentLine appendString: CGICalendarContentlineDelimiter];
+	if (self.hasValue)
+		[contentLine appendString: self.value];
+	[contentLine appendString: CGICalendarContentlineDelimiter];
 	return contentLine;
 }
 
 - (BOOL)isBegin {
-	return [self isName:CGICalendarContentlineNameBegin];
+	return [self isName: CGICalendarContentlineNameBegin];
 }
 
 - (BOOL)isEnd {
-	return [self isName:CGICalendarContentlineNameEnd];
+	return [self isName: CGICalendarContentlineNameEnd];
 }
 
 @end

@@ -39,40 +39,40 @@ NSString * const CGICalObjCSDKTTestsVtodoSample01Version = @"2.0";
 NSString * const CGICalObjCSDKTTestsVtodoSample01Prodid = @"-//ABC Corporation//NONSGML My Product//EN";
 
 - (void)testTodoParseSample01 {
-	CGICalendar *ical = [[CGICalendar alloc] init];
+	CGICalendar *ical = [CGICalendar new];
 	BOOL parseResult = [ical parseWithString:CGICalObjCSDKTTestsVtodoSample01 error:nil];
 	STAssertTrue(parseResult, @"");
-	NSLog(@"%@", [ical description]);
-	NSArray *objects = [ical objects];
+	NSLog(@"%@", ical.description);
+	NSArray *objects = ical.objects;
 	STAssertNotNil(objects, @"");
-	STAssertTrue([objects count] == 1, @"");
-	CGICalendarObject *icalObj = [objects objectAtIndex:0];
-	STAssertTrue(icalObj == [ical objectAtIndex:0], @"");
-	STAssertTrue([[icalObj version] isEqualToString:CGICalObjCSDKTTestsVtodoSample01Version], @"");
-	STAssertTrue([[icalObj prodid] isEqualToString:CGICalObjCSDKTTestsVtodoSample01Prodid], @"");
-	NSArray *components = [icalObj components];
+	STAssertTrue(objects.count == 1, @"");
+	CGICalendarObject *icalObj = objects[0];
+	STAssertTrue(icalObj == ical[0], @"");
+	STAssertTrue([icalObj.version isEqualToString:CGICalObjCSDKTTestsVtodoSample01Version], @"");
+	STAssertTrue([icalObj.prodid isEqualToString:CGICalObjCSDKTTestsVtodoSample01Prodid], @"");
+	NSArray *components = icalObj.components;
 	STAssertNotNil(components, @"");
-	STAssertTrue([components count] == 1, @"");
+	STAssertTrue(components.count == 1, @"");
 	CGICalendarComponent *icalComp = [icalObj componentAtIndex:0];
 	STAssertNotNil(icalComp, @"");
-	STAssertTrue([icalComp isTodo], @"");
+	STAssertTrue(icalComp.isTodo, @"");
 }
 
 - (void)testTodoMakeSample01 {
-	CGICalendar *ical = [[CGICalendar alloc] init];
+	CGICalendar *ical = [CGICalendar new];
 	CGICalendarObject *icalObj = [CGICalendarObject objectWithProdid:CGICalObjCSDKTTestsVtodoSample01Prodid version:CGICalObjCSDKTTestsVtodoSample01Version];
 	[ical addObject:icalObj];
 
-	CGICalendarComponent *icalTodo = [CGICalendarComponent todo];
+	CGICalendarComponent *icalTodo = CGICalendarComponent.todo;
 	STAssertNotNil(icalTodo, @"");
-	STAssertTrue([icalTodo isTodo], @"");
+	STAssertTrue(icalTodo.isTodo, @"");
 	[icalObj addComponent:icalTodo];
 
-	CGICalendarComponent *icalAlarm = [CGICalendarComponent alarm];
+	CGICalendarComponent *icalAlarm = CGICalendarComponent.alarm;
 	STAssertNotNil(icalAlarm, @"");
-	STAssertTrue([icalAlarm isAlarm], @"");
+	STAssertTrue(icalAlarm.isAlarm, @"");
 	[icalTodo addComponent:icalAlarm];
-	NSLog(@"%@", [ical description]);
+	NSLog(@"%@", ical.description);
 }
 
 @end

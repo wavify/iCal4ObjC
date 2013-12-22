@@ -13,13 +13,13 @@
 @implementation iCalObjCSDKTests(Object)
 
 - (void)testTodoObject {
-	CGICalendar *ical = [[CGICalendar alloc] init];
+	CGICalendar *ical = [CGICalendar new];
 
 	CGICalendarObject *icalObj = [CGICalendarObject object];
 	STAssertNotNil(icalObj, @"");
-	STAssertEquals([[ical objects] count], (NSUInteger)0, @"");
+	STAssertEquals(ical.objects.count, (NSUInteger)0, @"");
 	[ical addObject:icalObj];
-	STAssertEquals([[ical objects] count], (NSUInteger)1, @"");
+	STAssertEquals(ical.objects.count, (NSUInteger)1, @"");
 }
 
 @end

@@ -25,48 +25,48 @@ NSUInteger const CGICalendarComponentSequenceDefault = 0;
 #pragma mark Global methods
 
 + (id)componentWithType:(NSString *)aType {
-	return [[CGICalendarComponent alloc] initWithType:aType];
+	return [[CGICalendarComponent alloc] initWithType: aType];
 }
 
 + (id)event {
-	CGICalendarComponent *icalComp = [CGICalendarComponent componentWithType:CGICalendarComponentTypeEvent];
-	[icalComp setUID:[CGICalendar UUID]];
-	[icalComp setDateTimeStamp:[NSDate date]];
-	[icalComp setSequenceNumber:CGICalendarComponentSequenceDefault];
+	CGICalendarComponent *icalComp = [CGICalendarComponent componentWithType: CGICalendarComponentTypeEvent];
+	icalComp.UID = CGICalendar.UUID;
+	icalComp.dateTimeStamp = NSDate.date;
+	icalComp.sequenceNumber = CGICalendarComponentSequenceDefault;
 	return icalComp;
 }
 
 + (id)todo {
-	CGICalendarComponent *icalComp = [CGICalendarComponent componentWithType:CGICalendarComponentTypeTodo];
-	[icalComp setUID:[CGICalendar UUID]];
-	[icalComp setDateTimeStamp:[NSDate date]];
-	[icalComp setSequenceNumber:CGICalendarComponentSequenceDefault];
-	[icalComp setCreated:[NSDate date]];
+	CGICalendarComponent *icalComp = [CGICalendarComponent componentWithType: CGICalendarComponentTypeTodo];
+	icalComp.UID = CGICalendar.UUID;
+	icalComp.dateTimeStamp = NSDate.date;
+	icalComp.sequenceNumber = CGICalendarComponentSequenceDefault;
+	icalComp.created = NSDate.date;
 	return icalComp;
 }
 
 + (id)journal {
-	CGICalendarComponent *icalComp = [CGICalendarComponent componentWithType:CGICalendarComponentTypeJournal];
-	[icalComp setUID:[CGICalendar UUID]];
-	[icalComp setDateTimeStamp:[NSDate date]];
-	[icalComp setSequenceNumber:CGICalendarComponentSequenceDefault];
+	CGICalendarComponent *icalComp = [CGICalendarComponent componentWithType: CGICalendarComponentTypeJournal];
+	icalComp.UID = CGICalendar.UUID;
+	icalComp.dateTimeStamp = NSDate.date;
+	icalComp.sequenceNumber = CGICalendarComponentSequenceDefault;
 	return icalComp;
 }
 
 + (id)freebusy {
-	CGICalendarComponent *icalComp = [CGICalendarComponent componentWithType:CGICalendarComponentTypeFreebusy];
-	[icalComp setUID:[CGICalendar UUID]];
-	[icalComp setDateTimeStamp:[NSDate date]];
+	CGICalendarComponent *icalComp = [CGICalendarComponent componentWithType: CGICalendarComponentTypeFreebusy];
+	icalComp.UID = CGICalendar.UUID;
+	icalComp.dateTimeStamp = NSDate.date;
 	return icalComp;
 }
 
 + (id)timezone {
-	CGICalendarComponent *icalComp = [CGICalendarComponent componentWithType:CGICalendarComponentTypeTimezone];
+	CGICalendarComponent *icalComp = [CGICalendarComponent componentWithType: CGICalendarComponentTypeTimezone];
 	return icalComp;
 }
 
 + (id)alarm {
-	CGICalendarComponent *icalComp = [CGICalendarComponent componentWithType:CGICalendarComponentTypeAlarm];
+	CGICalendarComponent *icalComp = [CGICalendarComponent componentWithType: CGICalendarComponentTypeAlarm];
 	return icalComp;
 }
 
@@ -75,15 +75,15 @@ NSUInteger const CGICalendarComponentSequenceDefault = 0;
 
 - (id)init {
 	if ((self = [super init])) {
-		[self setComponents:[NSMutableArray array]];
-		[self setProperties:[NSMutableArray array]];
+		self.components = [NSMutableArray array];
+		self.properties = [NSMutableArray array];
 	}
 	return self;
 }
 
 - (id)initWithType:(NSString *)aType {
 	if ((self = [self init])) {
-		[self setType:aType];
+		self.type = aType;
 	}
 	return self;
 }
@@ -92,161 +92,154 @@ NSUInteger const CGICalendarComponentSequenceDefault = 0;
 #pragma mark Component
 
 - (void)addComponent:(CGICalendarComponent *)component {
-	[[self components] addObject:component];
+	[self.components addObject: component];
 }
 
 - (void)insertComponent:(CGICalendarComponent *)component atIndex:(NSUInteger)index {
-	[[self components] insertObject:component atIndex:index];
+	[self.components insertObject: component atIndex: index];
 }
 
 - (CGICalendarComponent *)componentAtIndex:(NSUInteger)index {
-	return [[self components] objectAtIndex:index];
+	return self.components[index];
 }
 
 - (NSUInteger)indexOfComponent:(CGICalendarComponent *)component {
-	return [[self components] indexOfObject:component];
+	return [self.components indexOfObject: component];
 }
 
 - (void)removeComponent:(CGICalendarComponent *)component {
-	[[self components] removeObject:component];
+	[self.components removeObject: component];
 }
 
 - (void)removeComponentAtIndex:(NSUInteger)index {
-	[[self components] removeObjectAtIndex:index];
+	[self.components removeObjectAtIndex: index];
 }
 
 #pragma mark -
 #pragma mark Property
 
 - (BOOL)hasPropertyForName:(NSString *)name {
-	for (CGICalendarProperty *icalProp in [self properties]) {
-		if ([icalProp isName:name]) {
+	for (CGICalendarProperty *icalProp in self.properties)
+		if ([icalProp isName: name])
 			return YES;
-		}
-	}
+
 	return NO;
 }
 
 - (void)addProperty:(CGICalendarProperty *)property {
-	[[self properties] addObject:property];
+	[self.properties addObject: property];
 }
 
 - (void)removePropertyForName:(NSString *)name {
-	for (CGICalendarProperty *icalProp in [self properties]) {
-		if ([icalProp isName:name]) {
-			[[self properties] removeObject:icalProp];
+	for (CGICalendarProperty *icalProp in self.properties)
+		if ([icalProp isName: name]) {
+			[self.properties removeObject: icalProp];
 			return;
 		}
-	}
 }
 
 - (void)setPropertyValue:(NSString *)value forName:(NSString *)name {
-	[self setPropertyValue:value forName:name parameterValues:[NSArray array] parameterNames:[NSArray array]];
+	[self setPropertyValue: value forName: name parameterValues: @[] parameterNames: @[]];
 }
 
 - (void)setPropertyValue:(NSString *)value forName:(NSString *)name parameterValues:(NSArray *)parameterValues parameterNames:(NSArray *)parameterNames {
-	CGICalendarProperty *icalProp = [self propertyForName:name];
-	if (icalProp == nil) {
-		icalProp = [[CGICalendarProperty alloc] init];
-		[icalProp setName:name];
-		[self addProperty:icalProp];
+	CGICalendarProperty *icalProp = [self propertyForName: name];
+	if (!icalProp) {
+		icalProp = [CGICalendarProperty new];
+		icalProp.name = name;
+		[self addProperty: icalProp];
 	}
-	[icalProp setValue:value];
-	if ([parameterValues count] != [parameterNames count]) {
+	icalProp.value = value;
+	if (parameterValues.count != parameterNames.count)
 		return;
-	}
-	for (NSUInteger n = 0; n < [parameterNames count]; n++) {
-		NSString *name = [parameterNames objectAtIndex:n];
-		id value = [parameterNames objectAtIndex:n];
-		[icalProp setParameterObject:value forName:name];
+	for (NSUInteger n = 0; n < parameterNames.count; n++) {
+		NSString *name = parameterNames[n];
+		id value = parameterNames[n];
+		[icalProp setParameterObject: value forName: name];
 	}
 }
 
 - (void)setPropertyObject:(id)object forName:(NSString *)name parameterValues:(NSArray *)parameterValues parameterNames:(NSArray *)parameterNames {
-	[self setPropertyValue:[object description] forName:name parameterValues:parameterValues parameterNames:parameterNames];
+	[self setPropertyValue: [object description] forName: name parameterValues: parameterValues parameterNames: parameterNames];
 }
 
 - (void)setPropertyObject:(id)object forName:(NSString *)name {
-	[self setPropertyValue:[object description] forName:name];
+	[self setPropertyValue: [object description] forName: name];
 }
 
 - (void)setPropertyDate:(NSDate *)object forName:(NSString *)name {
-	[self setPropertyValue:[object descriptionICalendar] forName:name];
+	[self setPropertyValue: object.descriptionICalendar forName: name];
 }
 
 - (void)setPropertyDate:(NSDate *)object forName:(NSString *)name parameterValues:(NSArray *)parameterValues parameterNames:(NSArray *)parameterNames {
-	[self setPropertyValue:[object descriptionICalendar] forName:name parameterValues:parameterValues parameterNames:parameterNames];
+	[self setPropertyValue: object.descriptionICalendar forName: name parameterValues: parameterValues parameterNames: parameterNames];
 }
 
 - (void)setPropertyInteger:(NSInteger)value forName:(NSString *)name {
-	[self setPropertyValue:[[NSNumber numberWithInteger:value] stringValue] forName:name];
+	[self setPropertyValue: @(value).stringValue forName: name];
 }
 
 - (void)setPropertyInteger:(NSInteger)value forName:(NSString *)name parameterValues:(NSArray *)parameterValues parameterNames:(NSArray *)parameterNames {
-	[self setPropertyValue:[[NSNumber numberWithInteger:value] stringValue] forName:name parameterValues:parameterValues parameterNames:parameterNames];
+	[self setPropertyValue: @(value).stringValue forName: name parameterValues: parameterValues parameterNames: parameterNames];
 }
 
 - (void)setPropertyFloat:(float)value forName:(NSString *)name {
-	[self setPropertyValue:[[NSNumber numberWithFloat:value] stringValue] forName:name];
+	[self setPropertyValue: @(value).stringValue forName: name];
 }
 
 - (void)setPropertyFloat:(float)value forName:(NSString *)name parameterValues:(NSArray *)parameterValues parameterNames:(NSArray *)parameterNames {
-	[self setPropertyValue:[[NSNumber numberWithFloat:value] stringValue] forName:name parameterValues:parameterValues parameterNames:parameterNames];
+	[self setPropertyValue: @(value).stringValue forName: name parameterValues: parameterValues parameterNames: parameterNames];
 }
 
 - (id)propertyAtIndex:(NSUInteger)index {
-	return [[self properties] objectAtIndex:index];
+	return self.properties[index];
 }
 
 - (CGICalendarProperty *)propertyForName:(NSString *)name {
-	for (CGICalendarProperty *icalProp in [self properties]) {
-		if ([icalProp isName:name]) {
+	for (CGICalendarProperty *icalProp in self.properties)
+		if ([icalProp isName: name])
 			return icalProp;
-		}
-	}
+
 	return nil;
 }
 
 - (NSArray *)allPropertyKeys {
 	NSMutableArray *keys = [NSMutableArray array];
-	for (CGICalendarProperty *icalProp in [self properties]) {
-		[keys addObject:[icalProp name]];
-	}
+	for (CGICalendarProperty *icalProp in self.properties)
+		[keys addObject: icalProp.name];
+
 	return keys;
 }
 
 - (NSString *)propertyValueForName:(NSString *)name {
-	for (CGICalendarProperty *icalProp in [self properties]) {
-		if ([icalProp isName:name]) {
-			return [icalProp value];
-		}
-	}
+	for (CGICalendarProperty *icalProp in self.properties)
+		if ([icalProp isName: name])
+			return icalProp.value;
+
 	return nil;
 }
 
 - (NSDate *)propertyDateForName:(NSString *)name {
-	for (CGICalendarProperty *icalProp in [self properties]) {
-		if ([icalProp isName:name]) {
-			return [icalProp dateValue];
-		}
-	}
+	for (CGICalendarProperty *icalProp in self.properties)
+		if ([icalProp isName: name])
+			return icalProp.dateValue;
+
 	return nil;
 }
 
 - (NSInteger)propertyIntegerForName:(NSString *)name {
-	for (CGICalendarProperty *icalProp in [self properties]) {
-		if ([icalProp isName:name])
-			return [icalProp integerValue];
-	}
+	for (CGICalendarProperty *icalProp in self.properties)
+		if ([icalProp isName: name])
+			return icalProp.integerValue;
+
 	return 0;
 }
 
 - (float)propertyFloatForName:(NSString *)name {
-	for (CGICalendarProperty *icalProp in [self properties]) {
-		if ([icalProp isName:name]) {
-			return [icalProp floatValue];
-		}
-	}
+	for (CGICalendarProperty *icalProp in self.properties)
+		if ([icalProp isName: name])
+			return icalProp.floatValue;
+
 	return 0;
 }
 
@@ -254,41 +247,42 @@ NSUInteger const CGICalendarComponentSequenceDefault = 0;
 #pragma mark String
 
 - (BOOL)isType:(NSString *)aType {
-	return [aType isEqualToString:[self type]];
+	return [aType isEqualToString: self.type];
 }
 
 - (BOOL)isEvent {
-	return [self isType:CGICalendarComponentTypeEvent];
+	return [self isType: CGICalendarComponentTypeEvent];
 }
 
 - (BOOL)isTodo {
-	return [self isType:CGICalendarComponentTypeTodo];
+	return [self isType: CGICalendarComponentTypeTodo];
 }
 
 - (BOOL)isJournal {
-	return [self isType:CGICalendarComponentTypeJournal];
+	return [self isType: CGICalendarComponentTypeJournal];
 }
 
 - (BOOL)isFreebusy {
-	return [self isType:CGICalendarComponentTypeFreebusy];
+	return [self isType: CGICalendarComponentTypeFreebusy];
 }
 
 - (BOOL)isTimezone {
-	return [self isType:CGICalendarComponentTypeTimezone];
+	return [self isType: CGICalendarComponentTypeTimezone];
 }
 
 - (BOOL)isAlarm {
-	return [self isType:CGICalendarComponentTypeAlarm];
+	return [self isType: CGICalendarComponentTypeAlarm];
 }
 
--(BOOL) isFullDay {
+-(BOOL)isFullDay {
 	// CG_ICALENDAR_PROERTY_DTSTART
-	for (CGICalendarProperty *icalProp in [self properties])
-		if ([icalProp isName:CGICalendarPropertyDtstart])
+	for (CGICalendarProperty *icalProp in self.properties)
+		if ([icalProp isName: CGICalendarPropertyDtstart])
 			if (icalProp.parameters.count > 0) {
 				CGICalendarParameter * param = icalProp.parameters.lastObject;
 				return (param.hasName && param.hasValue &&
-						([param.name compare:@"VALUE"] == 0) && ([param.value compare:@"DATE"] == 0));
+						([param.name compare: @"VALUE"] == NSOrderedSame) &&
+						([param.value compare: @"DATE"] == NSOrderedSame));
 			}
 
 	return NO;
@@ -302,14 +296,12 @@ NSString * const CGICalendarContentlineNameEnd = @"END";
 
 - (NSString *)description {
 	NSMutableString *objectsString = [NSMutableString string];
-	[objectsString appendFormat:@"%@:%@%@",CGICalendarContentlineNameBegin, [self type], CGICalendarContentlineTerm];
-	for (CGICalendarProperty *icalProp in [self properties]) {
-		[objectsString appendString:[icalProp description]];
-	}
-	for (CGICalendarComponent *icalComp in [self components]) {
-		[objectsString appendString:[icalComp description]];
-	}
-	[objectsString appendFormat:@"%@:%@%@",CGICalendarContentlineNameEnd, [self type], CGICalendarContentlineTerm];
+	[objectsString appendFormat: @"%@:%@%@", CGICalendarContentlineNameBegin, self.type, CGICalendarContentlineTerm];
+	for (CGICalendarProperty *icalProp in self.properties)
+		[objectsString appendString: icalProp.description];
+	for (CGICalendarComponent *icalComp in self.components)
+		[objectsString appendString: icalComp.description];
+	[objectsString appendFormat:@"%@:%@%@", CGICalendarContentlineNameEnd, self.type, CGICalendarContentlineTerm];
 	return objectsString;
 }
 
@@ -317,166 +309,162 @@ NSString * const CGICalendarContentlineNameEnd = @"END";
 #pragma mark 4.2.12 Participation Status
 
 - (void)setParticipationStatus:(NSInteger)status {
-	CGICalendarProperty *icalProp = [self propertyForName:CGICalendarPropertyPartstat];
-	if (icalProp == nil) {
-		icalProp = [[CGICalendarProperty alloc] init];
-	}
-	[icalProp setParticipationStatus:status];
+	[self setPropertyInteger: status forName: CGICalendarPropertyPartstat];
 }
 
 - (NSInteger)participationStatus {
-	CGICalendarProperty *icalProp = [self propertyForName:CGICalendarPropertyPartstat];
-	if (icalProp == nil) {
+	CGICalendarProperty *icalProp = [self propertyForName: CGICalendarPropertyPartstat];
+	if (!icalProp)
 		return CGICalendarParticipationStatusUnkown;
-	}
-	return [icalProp participationStatus];
+
+	return icalProp.participationStatus;
 }
 
 #pragma mark -
 #pragma mark 4.8.1.5 Description
 
 - (void)setNotes:(NSString *)value {
-	[self setPropertyValue:value forName:CGICalendarPropertyDescription];
+	[self setPropertyValue: value forName: CGICalendarPropertyDescription];
 }
 
 - (NSString *)notes {
-	return [self propertyValueForName:CGICalendarPropertyDescription];
+	return [self propertyValueForName: CGICalendarPropertyDescription];
 }
 
 #pragma mark -
 #pragma mark 4.8.1.7 Location
 
 - (void)setLocation:(NSString *)value {
-	[self setPropertyValue:value forName:CGICalendarPropertyLocation];
+	[self setPropertyValue: value forName: CGICalendarPropertyLocation];
 }
 
 - (NSString *)location {
-	return [self propertyValueForName:CGICalendarPropertyLocation];
+	return [self propertyValueForName: CGICalendarPropertyLocation];
 }
 
 #pragma mark -
 #pragma mark 4.8.1.9 Priority
 
 - (void)setPriority:(NSUInteger)value {
-	[self setPropertyInteger:(NSInteger)value forName:CGICalendarPropertyPriority];
+	[self setPropertyInteger: (NSInteger)value forName: CGICalendarPropertyPriority];
 }
 
 - (NSUInteger)priority {
-	return [self propertyIntegerForName:CGICalendarPropertyPriority];
+	return [self propertyIntegerForName: CGICalendarPropertyPriority];
 }
 
 #pragma mark -
 #pragma mark 4.8.1.12 Summary
 
 - (void)setSummary:(NSString *)value {
-	[self setPropertyValue:value forName:CGICalendarPropertySummary];
+	[self setPropertyValue: value forName: CGICalendarPropertySummary];
 }
 
 - (NSString *)summary {
-	return [self propertyValueForName:CGICalendarPropertySummary];
+	return [self propertyValueForName: CGICalendarPropertySummary];
 }
 
 #pragma mark -
 #pragma mark 4.8.2.1 Date/Time Completed
 
 - (void)setCompleted:(NSDate *)value {
-	[self setPropertyDate:value forName:CGICalendarPropertyCompleted];
+	[self setPropertyDate: value forName: CGICalendarPropertyCompleted];
 }
 
 - (NSDate *)completed {
-	return [self propertyDateForName:CGICalendarPropertyCompleted];
+	return [self propertyDateForName: CGICalendarPropertyCompleted];
 }
 
 #pragma mark -
 #pragma mark 4.8.2.2 Date/Time End
 
 - (void)setDateTimeEnd:(NSDate *)value {
-	[self setPropertyDate:value forName:CGICalendarPropertyDtend];
+	[self setPropertyDate: value forName: CGICalendarPropertyDtend];
 }
 
 - (NSDate *)dateTimeEnd {
-	return [self propertyDateForName:CGICalendarPropertyDtend];
+	return [self propertyDateForName: CGICalendarPropertyDtend];
 }
 
 #pragma mark -
 #pragma mark 4.8.2.3 Date/Time Due
 
 - (void)setDue:(NSDate *)value {
-	[self setPropertyDate:value forName:CGICalendarPropertyDue];
+	[self setPropertyDate: value forName: CGICalendarPropertyDue];
 }
 
 - (NSDate *)due {
-	return [self propertyDateForName:CGICalendarPropertyDue];
+	return [self propertyDateForName: CGICalendarPropertyDue];
 }
 
 #pragma mark -
 #pragma mark 4.8.2.4 Date/Time Start
 
 - (void)setDateTimeStart:(NSDate *)value {
-	[self setPropertyDate:value forName:CGICalendarPropertyDtstart];
+	[self setPropertyDate: value forName: CGICalendarPropertyDtstart];
 }
 
 - (NSDate *)dateTimeStart {
-	return [self propertyDateForName:CGICalendarPropertyDtstart];
+	return [self propertyDateForName: CGICalendarPropertyDtstart];
 }
 
 #pragma mark -
 #pragma mark 4.8.4.7 Unique Identifier
 
 - (void)setUID:(NSString *)value {
-	[self setPropertyValue:value forName:CGICalendarPropertyUid];
+	[self setPropertyValue: value forName: CGICalendarPropertyUid];
 }
 
 - (NSString *)UID {
-	return [self propertyValueForName:CGICalendarPropertyUid];
+	return [self propertyValueForName: CGICalendarPropertyUid];
 }
 
 #pragma mark -
 #pragma mark 4.8.7.1 Date/Time Created
 
 - (void)setCreated:(NSDate *)value {
-	[self setPropertyDate:value forName:CGICalendarPropertyCreated];
+	[self setPropertyDate: value forName: CGICalendarPropertyCreated];
 }
 
 - (NSDate *)created {
-	return [self propertyDateForName:CGICalendarPropertyCreated];
+	return [self propertyDateForName: CGICalendarPropertyCreated];
 }
 
 #pragma mark -
 #pragma mark 4.8.7.2 Date/Time Stamp
 
 - (void)setDateTimeStamp:(NSDate *)value {
-	[self setPropertyDate:value forName:CGICalendarPropertyDtstamp];
+	[self setPropertyDate: value forName: CGICalendarPropertyDtstamp];
 }
 
 - (NSDate *)dateTimeStamp {
-	return [self propertyDateForName:CGICalendarPropertyDtstamp];
+	return [self propertyDateForName: CGICalendarPropertyDtstamp];
 }
 
 #pragma mark -
 #pragma mark 4.8.7.3 Last Modified
 
 - (void)setLastModified:(NSDate *)value {
-	[self setPropertyDate:value forName:CGICalendarPropertyLastModified];
+	[self setPropertyDate: value forName: CGICalendarPropertyLastModified];
 }
 
 - (NSDate *)lastModified {
-	return [self propertyDateForName:CGICalendarPropertyLastModified];
+	return [self propertyDateForName: CGICalendarPropertyLastModified];
 }
 
 #pragma mark -
 #pragma mark 4.8.7.4 Sequence Number
 
 - (void)setSequenceNumber:(NSUInteger)value {
-	[self setPropertyInteger:value forName:CGICalendarPropertySequence];
+	[self setPropertyInteger: value forName: CGICalendarPropertySequence];
 }
 
 - (NSUInteger)sequenceNumber {
-	return [self propertyIntegerForName:CGICalendarPropertySequence];
+	return [self propertyIntegerForName: CGICalendarPropertySequence];
 }
 
 - (void)incrementSequenceNumber {
-	[self setSequenceNumber:([self sequenceNumber] + 1)];
+	self.sequenceNumber++;
 }
 
 @end

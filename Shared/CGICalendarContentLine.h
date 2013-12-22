@@ -32,9 +32,9 @@ extern NSString * const CGICalendarContentlineComponentVtimezone;
 - (id)initWithString:(NSString *)aString;
 - (void)setString:(NSString *)aString;
 
-- (NSString *)description;
+@property (nonatomic, readonly) NSString *description;
 
-- (BOOL)isBegin;
-- (BOOL)isEnd;
+@property (nonatomic, readonly) BOOL isBegin;
+@property (nonatomic, readonly) BOOL isEnd;
 
 @end

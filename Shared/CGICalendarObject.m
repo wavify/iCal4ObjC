@@ -20,15 +20,15 @@ NSString * const CGICalendarObjectProdidParam = @"PRODID";
 #pragma mark Global
 
 + (id)object {
-	return [[CGICalendarObject alloc] init];
+	return [CGICalendarObject new];
 }
 
 + (id)objectWithProdid:(NSString *)prodid {
-	return [[CGICalendarObject alloc] initWithProdid:prodid];
+	return [[CGICalendarObject alloc] initWithProdid: prodid];
 }
 
 + (id)objectWithProdid:(NSString *)prodid version:(NSString *)version {
-	return [[CGICalendarObject alloc] initWithProdid:prodid version:version];
+	return [[CGICalendarObject alloc] initWithProdid: prodid version: version];
 }
 
 #pragma mark -
@@ -36,27 +36,27 @@ NSString * const CGICalendarObjectProdidParam = @"PRODID";
 
 - (id)init {
 	if ((self = [super init])) {
-		[self setType:CGICalendarObjectTypeDefault];
-		[self setVersion:CGICalendarObjectVersionDefault];
-		[self setProdid:CGICalendarObjectProdidDefault];
+		self.type = CGICalendarObjectTypeDefault;
+		self.version = CGICalendarObjectVersionDefault;
+		self.prodid = CGICalendarObjectProdidDefault;
 	}
 	return self;
 }
 
 - (id)initWithProdid:(NSString *)prodid version:(NSString *)version {
 	if ((self = [super init])) {
-		[self setType:CGICalendarObjectTypeDefault];
-		[self setVersion:version];
-		[self setProdid:prodid];
+		self.type = CGICalendarObjectTypeDefault;
+		self.version = version;
+		self.prodid = prodid;
 	}
 	return self;
 }
 
 - (id)initWithProdid:(NSString *)prodid {
 	if ((self = [super init])) {
-		[self setType:CGICalendarObjectTypeDefault];
-		[self setVersion:CGICalendarObjectVersionDefault];
-		[self setProdid:prodid];
+		self.type = CGICalendarObjectTypeDefault;
+		self.version = CGICalendarObjectVersionDefault;
+		self.prodid = prodid;
 	}
 	return self;
 }
@@ -65,19 +65,19 @@ NSString * const CGICalendarObjectProdidParam = @"PRODID";
 #pragma mark Property Utility Methods
 
 - (void)setVersion:(NSString *)version {
-	[self setPropertyValue:version forName:CGICalendarObjectVersionParam];
+	[self setPropertyValue: version forName: CGICalendarObjectVersionParam];
 }
 
 - (NSString *)version {
-	return [self propertyValueForName:CGICalendarObjectVersionParam];
+	return [self propertyValueForName: CGICalendarObjectVersionParam];
 }
 
 - (void)setProdid:(NSString *)prodid {
-	[self setPropertyValue:prodid forName:CGICalendarObjectProdidParam];
+	[self setPropertyValue: prodid forName: CGICalendarObjectProdidParam];
 }
 
 - (NSString *)prodid {
-	return [self propertyValueForName:CGICalendarObjectProdidParam];
+	return [self propertyValueForName: CGICalendarObjectProdidParam];
 }
 
 #pragma mark -
@@ -85,33 +85,33 @@ NSString * const CGICalendarObjectProdidParam = @"PRODID";
 
 - (NSArray *)componentsWithType:(NSString *)type {
 	NSMutableArray *typeComponents = [NSMutableArray array];
-	for (CGICalendarComponent *icalComponent in [self components]) {
-		if ([icalComponent isType:type] == NO) {
+	for (CGICalendarComponent *icalComponent in self.components) {
+		if (![icalComponent isType: type])
 			continue;
-		}
-		[typeComponents addObject:icalComponent];
+
+		[typeComponents addObject: icalComponent];
 	}
 	return typeComponents;
 }
 
 - (NSArray *)events {
-	return [self componentsWithType:CGICalendarComponentTypeEvent];
+	return [self componentsWithType: CGICalendarComponentTypeEvent];
 }
 
 - (NSArray *)todos {
-	return [self componentsWithType:CGICalendarComponentTypeTodo];
+	return [self componentsWithType: CGICalendarComponentTypeTodo];
 }
 
 - (NSArray *)journals {
-	return [self componentsWithType:CGICalendarComponentTypeJournal];
+	return [self componentsWithType: CGICalendarComponentTypeJournal];
 }
 
 - (NSArray *)freebusies {
-	return [self componentsWithType:CGICalendarComponentTypeFreebusy];
+	return [self componentsWithType: CGICalendarComponentTypeFreebusy];
 }
 
 - (NSArray *)timezones {
-	return [self componentsWithType:CGICalendarComponentTypeTimezone];
+	return [self componentsWithType: CGICalendarComponentTypeTimezone];
 }
 
 @end

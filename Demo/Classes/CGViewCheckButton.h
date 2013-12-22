@@ -11,7 +11,7 @@
 
 @interface CGViewCheckButton : UIButton
 
-@property (strong) CGICalendarComponent *todoComponent;
+@property (nonatomic, strong) CGICalendarComponent *todoComponent;
 
 - (id)initWithTodoComponent:(CGICalendarComponent *)todoComp;
 

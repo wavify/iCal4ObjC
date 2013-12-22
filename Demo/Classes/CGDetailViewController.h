@@ -21,11 +21,11 @@
 
 @interface CGDetailViewController : UITableViewController <UITextFieldDelegate, UITextViewDelegate>
 
-@property (strong) CGICalendarComponent *todo;
-@property (strong) id<CGDetailViewControllerDelegate> delegate;
-@property (strong) UITextField *summaryField;
-@property (strong) UITextView *descField;
-@property (assign, getter = isModalMode) BOOL modalMode;
+@property (nonatomic, strong) CGICalendarComponent *todo;
+@property (nonatomic, strong) id<CGDetailViewControllerDelegate> delegate;
+@property (nonatomic, strong) UITextField *summaryField;
+@property (nonatomic, strong) UITextView *descField;
+@property (nonatomic, assign, getter = isModalMode) BOOL modalMode;
 
 - (id)initWithTodo:(CGICalendarComponent *)aTodo;
 
